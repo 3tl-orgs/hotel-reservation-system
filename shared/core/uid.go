@@ -1,13 +1,14 @@
-package uid
+package core
 
 import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/btcsuite/btcutil/base58"
 	"strconv"
 	"strings"
+
+	"github.com/btcsuite/btcutil/base58"
 )
 
 // UID is method to generate a virtual unique identifier for whole system

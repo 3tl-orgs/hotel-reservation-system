@@ -2,9 +2,9 @@ package uploadprovider
 
 import (
 	"context"
-	"go-booking/shared/dto"
+	"go-booking/shared/core"
 )
 
 type UploadProvider interface {
-	SaveFileUploaded(ctx context.Context, data []byte, dst string) (*dto.Image, error)
+	SaveFileUploaded(ctx context.Context, data []byte, dst string) (*core.Image, error)
 }

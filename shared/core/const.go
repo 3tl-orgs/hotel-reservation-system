@@ -1,4 +1,4 @@
-package dto
+package core
 
 import "log"
 
@@ -6,10 +6,6 @@ const (
 	DbTypeRestaurant = 1
 	DbTypeUser       = 2
 )
-
-type Requester interface {
-	GetUserId() int
-}
 
 const (
 	CurrentUser = "user"

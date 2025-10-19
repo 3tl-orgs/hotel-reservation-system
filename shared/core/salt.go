@@ -1,4 +1,4 @@
-package salt
+package core
 
 import (
 	"math/rand"

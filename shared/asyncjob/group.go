@@ -2,7 +2,7 @@ package asyncjob
 
 import (
 	"context"
-	"go-booking/shared/dto"
+	"go-booking/shared/core"
 	"log"
 	"sync"
 )
@@ -29,7 +29,7 @@ func (g *group) Run(ctx context.Context) error {
 	for i, _ := range g.jobs {
 		if g.isConcurrent {
 			go func(j Job) {
-				defer dto.AppRecover()
+				defer core.AppRecover()
 				errChan <- g.runJob(ctx, j)
 				g.wg.Done()
 			}(g.jobs[i])

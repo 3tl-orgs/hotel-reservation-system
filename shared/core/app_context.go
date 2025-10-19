@@ -1,4 +1,4 @@
-package appctx
+package core
 
 import (
 	"go-booking/shared/pubsub"

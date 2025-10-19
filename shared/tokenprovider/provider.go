@@ -2,7 +2,7 @@ package tokenprovider
 
 import (
 	"errors"
-	"go-booking/shared/dto"
+	"go-booking/shared/core"
 	"time"
 )
 
@@ -14,17 +14,17 @@ type Provider interface {
 }
 
 var (
-	ErrNotFound = dto.NewCustomErrorResponse(
+	ErrNotFound = core.NewCustomErrorResponse(
 		errors.New("token not found"),
 		"token not found",
 		"ERROR_NOT_FOUND")
 
-	ErrEncodingToken = dto.NewCustomErrorResponse(
+	ErrEncodingToken = core.NewCustomErrorResponse(
 		errors.New("error encoding the token"),
 		"error encoding the token",
 		"ERROR_ENCODING_TOKEN")
 
-	ErrInvalidToken = dto.NewCustomErrorResponse(
+	ErrInvalidToken = core.NewCustomErrorResponse(
 		errors.New("invalid token provided"),
 		"invalid token provided",
 		"ERROR_INVALID_TOKEN",
