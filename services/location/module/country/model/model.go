@@ -1,6 +1,10 @@
 package model
 
-import "github.com/ngleanhvu/go-booking/shared/core"
+import (
+	"strings"
+
+	"github.com/ngleanhvu/go-booking/shared/core"
+)
 
 type Country struct {
 	*core.SQLModel `json:",inline"`
@@ -10,4 +14,23 @@ type Country struct {
 
 func (Country) TableName() string {
 	return "countries"
+}
+
+func (c *Country) Mask() {
+	c.SQLModel.Mask(core.MaskTypeCountry)
+}
+
+func (c *Country) Validate() error {
+	c.Name = strings.TrimSpace(c.Name)
+	c.Code = strings.TrimSpace(c.Code)
+
+	if err := checkCountryName(c.Name); err != nil {
+		return err
+	}
+
+	if err := checkCountryCode(c.Code); err != nil {
+		return err
+	}
+
+	return nil
 }

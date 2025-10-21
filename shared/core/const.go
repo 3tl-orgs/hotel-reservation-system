@@ -7,6 +7,7 @@ const (
 	KeyCompJWT      = "jwt"
 	KeyCompConf     = "config"
 
-	MaskTypeUser = 1
-	MaskTypeTask = 2
+	MaskTypeCountry = 3
+	MaskTypeUser    = 1
+	MaskTypeTask    = 2
 )
