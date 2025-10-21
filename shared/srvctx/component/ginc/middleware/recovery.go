@@ -2,7 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	sctx "github.com/viettranx/service-context"
+	"github.com/ngleanhvu/go-booking/shared/srvctx"
+
 	"net/http"
 )
 
@@ -10,7 +11,7 @@ type CanGetStatusCode interface {
 	StatusCode() int
 }
 
-func Recovery(serviceCtx sctx.ServiceContext) gin.HandlerFunc {
+func Recovery(serviceCtx srvctx.ServiceContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {

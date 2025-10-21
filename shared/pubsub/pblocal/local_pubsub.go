@@ -2,10 +2,11 @@ package pblocal
 
 import (
 	"context"
-	"go-booking/shared/core"
-	"go-booking/shared/pubsub"
 	"log"
 	"sync"
+
+	"github.com/ngleanhvu/go-booking/shared/core"
+	"github.com/ngleanhvu/go-booking/shared/pubsub"
 )
 
 type localPubSub struct {

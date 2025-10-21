@@ -3,15 +3,15 @@ package uploadprovider
 import (
 	"bytes"
 	"context"
-	"fmt"
-	"go-booking/shared/core"
-	"log"
-	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/ngleanhvu/go-booking/shared/core"
+
+	"log"
+	"net/http"
 )
 
 type s3Provider struct {
@@ -23,7 +23,6 @@ type s3Provider struct {
 	session    *session.Session
 }
 
-// NewS3Provider creates a new s3Provider
 func NewS3Provider(bucketName string, region string, apiKey string, secret string, domain string) *s3Provider {
 	provider := &s3Provider{
 		bucketName: bucketName,
@@ -73,10 +72,7 @@ func (provider *s3Provider) SaveFileUploaded(ctx context.Context, data []byte, d
 		return nil, err
 	}
 
-	img := &core.Image{
-		Url:       fmt.Sprintf("%s/%s", provider.domain, dst),
-		CloudName: "s3",
-	}
+	img := &core.Image{}
 
 	return img, nil
 }

@@ -4,7 +4,7 @@ import (
 	"flag"
 
 	"github.com/gin-gonic/gin"
-	sctx "github.com/viettranx/service-context"
+	sctx "github.com/ngleanhvu/go-booking/shared/srvctx"
 )
 
 const (
@@ -51,7 +51,7 @@ func (gs *ginEngine) Activate(sv sctx.ServiceContext) error {
 }
 
 func (gs *ginEngine) Stop() error {
-	return nil\
+	return nil
 }
 
 func (gs *ginEngine) InitFlags() {

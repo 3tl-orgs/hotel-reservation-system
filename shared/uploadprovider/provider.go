@@ -2,7 +2,7 @@ package uploadprovider
 
 import (
 	"context"
-	"go-booking/shared/core"
+	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
 type UploadProvider interface {

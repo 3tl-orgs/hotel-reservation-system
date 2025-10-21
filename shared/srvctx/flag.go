@@ -3,10 +3,11 @@ package srvctx
 import (
 	"flag"
 	"fmt"
-	"github.com/facebookgo/flagenv"
 	"os"
 	"reflect"
 	"strings"
+
+	"github.com/facebookgo/flagenv"
 )
 
 func isZeroValue(f *flag.Flag, value string) bool {
