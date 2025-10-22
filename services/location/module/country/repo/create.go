@@ -8,7 +8,7 @@ import (
 )
 
 func (s *postgresRepo) Create(ctx context.Context, data *model.CountryCreateDto) error {
-	if err := s.db.Take(data.TableName()).Create(data).Error; err != nil {
+	if err := s.db.Table(data.TableName()).Create(data).Error; err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

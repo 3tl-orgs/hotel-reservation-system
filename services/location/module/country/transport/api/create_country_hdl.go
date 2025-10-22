@@ -20,7 +20,12 @@ func (api *api) CreateCountryHdl() gin.HandlerFunc {
 			return
 		}
 
+		if err := api.business.CreateCountryBiz(c, &data); err != nil {
+			core.WriteErrorResponse(c, err)
+			return
+		}
+
 		data.Mask()
-		c.JSON(200, core.SuccessResponse(data, nil, nil))
+		c.JSON(201, core.SuccessResponse(data, nil, nil))
 	}
 }

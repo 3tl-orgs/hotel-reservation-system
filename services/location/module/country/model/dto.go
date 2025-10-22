@@ -7,9 +7,9 @@ import (
 )
 
 type CountryCreateDto struct {
-	*core.SQLModel `json:",inline"`
-	Code           string `json:"code" gorm:"column:code" db:"code"`
-	Name           string `json:"name" gorm:"column:name" db:"name"`
+	core.SQLModel
+	Code string `json:"code" gorm:"column:code" db:"code"`
+	Name string `json:"name" gorm:"column:name" db:"name"`
 }
 
 func (CountryCreateDto) TableName() string {
@@ -36,6 +36,7 @@ func (c *CountryCreateDto) Validate() error {
 }
 
 type CountryUpdateDto struct {
+	core.SQLModel
 	Code string `json:"code" gorm:"column:code" db:"code"`
 	Name string `json:"name" gorm:"column:name" db:"name"`
 }

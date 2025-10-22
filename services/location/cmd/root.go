@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ngleanhvu/go-booking/services/location/composer"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	sctx "github.com/ngleanhvu/go-booking/shared/srvctx"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc"
@@ -52,14 +53,11 @@ var rootCmd = &cobra.Command{
 }
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
+	countryApiTransport := composer.ComposerCountryApiTransport(serviceCtx)
 	locations := router.Group("/locations")
 	{
-		locations.GET("/test", func(context *gin.Context) {
-			context.JSON(200, gin.H{
-				"code":    0,
-				"message": "success",
-			})
-		})
+		// countries
+		locations.POST("/countries/create", countryApiTransport.CreateCountryHdl())
 	}
 }
 

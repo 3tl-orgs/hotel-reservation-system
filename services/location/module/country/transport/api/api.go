@@ -7,7 +7,7 @@ import (
 )
 
 type Business interface {
-	CreateCountry(ctx context.Context, data *model.CountryCreateDto) error
+	CreateCountryBiz(ctx context.Context, data *model.CountryCreateDto) error
 }
 
 type api struct {
