@@ -8,6 +8,7 @@ import (
 
 type Business interface {
 	CreateCountryBiz(ctx context.Context, data *model.CountryCreateDto) error
+	GetCountryByIdBiz(ctx context.Context, id int) (*model.Country, error)
 }
 
 type api struct {

@@ -8,6 +8,7 @@ import (
 )
 
 func (s *business) CreateCountryBiz(ctx context.Context, data *model.CountryCreateDto) error {
+
 	if err := s.countryRepo.Create(ctx, data); err != nil {
 		return core.ErrInternalServerError.
 			WithError(model.ErrCannotCreateCountry.Error()).

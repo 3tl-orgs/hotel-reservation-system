@@ -9,7 +9,7 @@ import (
 type Country struct {
 	core.SQLModel
 	Name string `json:"name" gorm:"column:name"`
-	Code string `json:"code" gorm:"column:code,unique"`
+	Code string `json:"code" gorm:"column:code;unique"`
 }
 
 func (Country) TableName() string {

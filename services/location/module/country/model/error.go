@@ -7,4 +7,6 @@ var (
 	ErrCountryCodeIsEmpty      = errors.New("country code is empty")
 	ErrCountryCodeIsDuplicated = errors.New("country code is duplicated")
 	ErrCannotCreateCountry     = errors.New("cannot create country")
+	ErrCannotGetCountry        = errors.New("cannot get country")
+	ErrCountryNotFound         = errors.New("country not found")
 )

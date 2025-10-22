@@ -10,4 +10,5 @@ const (
 	MaskTypeCountry = 3
 	MaskTypeUser    = 1
 	MaskTypeTask    = 2
+	EntityDeleted   = false
 )

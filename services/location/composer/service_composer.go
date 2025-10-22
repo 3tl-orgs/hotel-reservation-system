@@ -11,6 +11,7 @@ import (
 
 type CountryApiTransport interface {
 	CreateCountryHdl() gin.HandlerFunc
+	GetCountryByIdHdl() gin.HandlerFunc
 }
 
 func ComposerCountryApiTransport(sctx srvctx.ServiceContext) CountryApiTransport {
