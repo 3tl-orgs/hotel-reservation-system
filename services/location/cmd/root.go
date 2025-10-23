@@ -60,6 +60,7 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		locations.POST("/countries", countryApiTransport.CreateCountryHdl())
 		locations.GET("/countries/:id", countryApiTransport.GetCountryByIdHdl())
 		locations.PUT("/countries/:id", countryApiTransport.UpdateCountryHdl())
+		locations.GET("/countries", countryApiTransport.ListCountryHdl())
 	}
 }
 

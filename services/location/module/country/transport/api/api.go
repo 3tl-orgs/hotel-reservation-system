@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/ngleanhvu/go-booking/services/location/module/country/model"
+	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
 type Business interface {
@@ -11,6 +12,10 @@ type Business interface {
 	GetCountryByIdBiz(ctx context.Context, id int) (*model.Country, error)
 	GetCountryByCodeBiz(ctx context.Context, code string) (*model.Country, error)
 	UpdateCountryBiz(ctx context.Context, id int, data *model.CountryUpdateDto) error
+	ListCountryBiz(ctx context.Context,
+		filter *model.Filter,
+		paging *core.Paging,
+		moreKey ...string) ([]model.Country, error)
 }
 
 type api struct {

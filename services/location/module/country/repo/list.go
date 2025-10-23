@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/ngleanhvu/go-booking/services/location/module/country/model"
@@ -18,23 +19,31 @@ func (s *postgresRepo) List(ctx context.Context,
 
 	db := s.db.Table(model.Country{}.TableName())
 
+	for _, key := range moreKeys {
+		db.Preload(key)
+	}
+
+	db = db.Where("status = ?", true)
+
 	if f := filter; f != nil {
-		keyword := strings.TrimSpace(f.Keyword)
+		keyword := strings.TrimSpace(strings.ToLower(f.Keyword))
 		if keyword != "" {
-			db = db.Where("lower(name) LIKE ?", keyword)
+			db = db.Where("lower(name) LIKE ?", "%"+keyword+"%")
 		}
 	}
 
 	var total int64
-
 	if err := db.Count(&total).Error; err != nil {
 		return nil, errors.WithStack(err)
 	}
-
 	paging.Total = int(total)
 
-	if v := paging.FakeCursor; v != "" {
-		uid, err := core.FromBase58()
+	if err := db.Order(fmt.Sprintf("%s %s", paging.SortBy, paging.SortDir)).
+		Limit(paging.Limit).
+		Offset((paging.Page - 1) * paging.Limit).
+		Find(&result).Error; err != nil {
+		return nil, errors.WithStack(err)
 	}
 
+	return result, nil
 }
