@@ -12,9 +12,10 @@ import (
 type CountryApiTransport interface {
 	CreateCountryHdl() gin.HandlerFunc
 	GetCountryByIdHdl() gin.HandlerFunc
+	UpdateCountryHdl() gin.HandlerFunc
 }
 
-func ComposerCountryApiTransport(sctx srvctx.ServiceContext) CountryApiTransport {
+func NewComposerCountryApiTransport(sctx srvctx.ServiceContext) CountryApiTransport {
 	countryDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
 	countryRepo := repo.NewPostgresRepo(countryDb.GetDB())
 	countryBiz := business.NewBusiness(countryRepo)

@@ -8,7 +8,9 @@ import (
 
 type CountryRepo interface {
 	Create(ctx context.Context, data *model.CountryCreateDto) error
-	Find(ctx context.Context, id int) (*model.Country, error)
+	GetById(ctx context.Context, id int) (*model.Country, error)
+	GetByCode(ctx context.Context, code string) (*model.Country, error)
+	Update(ctx context.Context, id int, data *model.CountryUpdateDto) error
 }
 
 type business struct {

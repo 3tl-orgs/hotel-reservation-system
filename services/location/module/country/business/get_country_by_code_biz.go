@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (biz *business) GetCountryByIdBiz(ctx context.Context, id int) (*model.Country, error) {
-	data, err := biz.countryRepo.GetById(ctx, id)
+func (biz *business) GetCountryByCodeBiz(ctx context.Context, code string) (*model.Country, error) {
+	data, err := biz.countryRepo.GetByCode(ctx, code)
 	if err != nil {
 		if errors.Is(err, core.ErrRecordNotFound) {
 			return nil, core.ErrNotFound.
@@ -22,8 +22,7 @@ func (biz *business) GetCountryByIdBiz(ctx context.Context, id int) (*model.Coun
 	}
 
 	if data.Status == core.EntityDeleted {
-		return nil, core.ErrNotFound.
-			WithError(model.ErrCountryNotFound.Error())
+		return nil, core.ErrNotFound.WithError(model.ErrCountryNotFound.Error())
 	}
 
 	return data, nil

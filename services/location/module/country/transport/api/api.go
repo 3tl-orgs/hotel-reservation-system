@@ -9,6 +9,8 @@ import (
 type Business interface {
 	CreateCountryBiz(ctx context.Context, data *model.CountryCreateDto) error
 	GetCountryByIdBiz(ctx context.Context, id int) (*model.Country, error)
+	GetCountryByCodeBiz(ctx context.Context, code string) (*model.Country, error)
+	UpdateCountryBiz(ctx context.Context, id int, data *model.CountryUpdateDto) error
 }
 
 type api struct {

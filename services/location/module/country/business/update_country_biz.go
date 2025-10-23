@@ -7,19 +7,17 @@ import (
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
-func (s *business) CreateCountryBiz(ctx context.Context, data *model.CountryCreateDto) error {
-
-	existingData, _ := s.countryRepo.GetByCode(ctx, data.Code)
+func (biz *business) UpdateCountryBiz(ctx context.Context, id int, data *model.CountryUpdateDto) error {
+	existingData, _ := biz.countryRepo.GetByCode(ctx, *data.Code)
 
 	if existingData != nil {
 		return core.ErrInternalServerError.
 			WithError(model.ErrCountryCodeIsDuplicated.Error())
 	}
 
-	if err := s.countryRepo.Create(ctx, data); err != nil {
+	if err := biz.countryRepo.Update(ctx, id, data); err != nil {
 		return core.ErrInternalServerError.
-			WithError(model.ErrCannotCreateCountry.Error()).
-			WithDebug(err.Error())
+			WithError(model.ErrCannotUpdateCountry.Error())
 	}
 
 	return nil

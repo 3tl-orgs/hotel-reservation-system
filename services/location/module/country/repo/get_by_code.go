@@ -9,19 +9,15 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *postgresRepo) GetById(ctx context.Context,
-	id int,
-) (*model.Country, error) {
+func (s *postgresRepo) GetByCode(ctx context.Context, code string) (*model.Country, error) {
 	var country model.Country
-
 	if err := s.db.Table(model.Country{}.TableName()).
-		Where("id = ?", id).First(&country).Error; err != nil {
+		Where("code = ?", code).
+		First(&country).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, core.ErrRecordNotFound
+			return nil, core.ErrNotFound
 		}
-
 		return nil, errors.WithStack(err)
 	}
-
 	return &country, nil
 }

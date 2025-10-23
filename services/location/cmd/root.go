@@ -53,12 +53,13 @@ var rootCmd = &cobra.Command{
 }
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
-	countryApiTransport := composer.ComposerCountryApiTransport(serviceCtx)
+	countryApiTransport := composer.NewComposerCountryApiTransport(serviceCtx)
 	locations := router.Group("/locations")
 	{
 		// countries
-		locations.POST("/countries/create", countryApiTransport.CreateCountryHdl())
+		locations.POST("/countries", countryApiTransport.CreateCountryHdl())
 		locations.GET("/countries/:id", countryApiTransport.GetCountryByIdHdl())
+		locations.PUT("/countries/:id", countryApiTransport.UpdateCountryHdl())
 	}
 }
 

@@ -36,9 +36,8 @@ func (c *CountryCreateDto) Validate() error {
 }
 
 type CountryUpdateDto struct {
-	core.SQLModel
-	Code string `json:"code" gorm:"column:code" db:"code"`
-	Name string `json:"name" gorm:"column:name" db:"name"`
+	Code *string `json:"code" gorm:"column:code" db:"code"`
+	Name *string `json:"name" gorm:"column:name" db:"name"`
 }
 
 func (CountryUpdateDto) TableName() string {
@@ -46,14 +45,14 @@ func (CountryUpdateDto) TableName() string {
 }
 
 func (c *CountryUpdateDto) Validate() error {
-	c.Code = strings.TrimSpace(c.Code)
-	c.Name = strings.TrimSpace(c.Name)
+	*c.Code = strings.TrimSpace(*c.Code)
+	*c.Name = strings.TrimSpace(*c.Name)
 
-	if err := checkCountryName(c.Name); err != nil {
+	if err := checkCountryName(*c.Name); err != nil {
 		return ErrCountryNameIsEmpty
 	}
 
-	if err := checkCountryCode(c.Code); err != nil {
+	if err := checkCountryCode(*c.Code); err != nil {
 		return ErrCountryCodeIsEmpty
 	}
 
