@@ -1,11 +1,13 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
-func (api *api) GetCountryByIdHdl() gin.HandlerFunc {
+func (api *api) DeleteCountryHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		uid, err := core.FromBase58(c.Param("id"))
 
@@ -16,13 +18,11 @@ func (api *api) GetCountryByIdHdl() gin.HandlerFunc {
 			return
 		}
 
-		data, err := api.business.GetCountryByIdBiz(c, int(uid.GetLocalID()))
-
-		if err != nil {
+		if err := api.business.DeleteCountryBiz(c, int(uid.GetLocalID())); err != nil {
 			core.WriteErrorResponse(c, err)
 			return
 		}
 
-		c.JSON(200, core.SuccessResponse(data, nil, nil))
+		c.JSON(http.StatusOK, core.ResponseData(true))
 	}
 }

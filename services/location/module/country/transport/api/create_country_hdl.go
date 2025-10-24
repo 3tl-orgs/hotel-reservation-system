@@ -11,7 +11,9 @@ func (api *api) CreateCountryHdl() gin.HandlerFunc {
 		var data model.CountryCreateDto
 
 		if err := c.ShouldBindJSON(&data); err != nil {
-			core.WriteErrorResponse(c, core.ErrBadRequest.WithError(err.Error()))
+			core.WriteErrorResponse(c, core.ErrBadRequest.
+				WithError(err.Error()).
+				WithDebug(err.Error()))
 			return
 		}
 

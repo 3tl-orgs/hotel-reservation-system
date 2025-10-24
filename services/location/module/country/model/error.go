@@ -11,4 +11,5 @@ var (
 	ErrCountryNotFound         = errors.New("country not found")
 	ErrExistingCountry         = errors.New("country already exists")
 	ErrCannotUpdateCountry     = errors.New("cannot update country")
+	ErrCannotDeleteCountry     = errors.New("cannot delete country")
 )

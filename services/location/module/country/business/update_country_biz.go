@@ -8,7 +8,11 @@ import (
 )
 
 func (biz *business) UpdateCountryBiz(ctx context.Context, id int, data *model.CountryUpdateDto) error {
-	existingData, _ := biz.countryRepo.GetByCode(ctx, *data.Code)
+	existingData, err := biz.countryRepo.GetByCode(ctx, *data.Code)
+
+	if err != nil {
+		return err
+	}
 
 	if existingData != nil {
 		return core.ErrInternalServerError.

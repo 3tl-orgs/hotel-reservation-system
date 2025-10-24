@@ -9,7 +9,11 @@ import (
 
 func (s *business) CreateCountryBiz(ctx context.Context, data *model.CountryCreateDto) error {
 
-	existingData, _ := s.countryRepo.GetByCode(ctx, data.Code)
+	existingData, err := s.countryRepo.GetByCode(ctx, data.Code)
+
+	if err != nil {
+		return err
+	}
 
 	if existingData != nil {
 		return core.ErrInternalServerError.
