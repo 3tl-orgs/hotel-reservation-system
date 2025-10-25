@@ -25,7 +25,7 @@ func (s *postgresRepo) List(ctx context.Context,
 	if f := filter; f != nil {
 		keyword := strings.TrimSpace(f.Keyword)
 		if keyword != "" {
-			db = db.Where("lower(name) LIKE ?", keyword)
+			db = db.Where("lower(name) LIKE ?", "%"+keyword+"%")
 		}
 	}
 

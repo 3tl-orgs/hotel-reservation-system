@@ -2,6 +2,7 @@ package model
 
 import (
 	"strings"
+	"time"
 
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
@@ -36,8 +37,9 @@ func (c *CountryCreateDto) Validate() error {
 }
 
 type CountryUpdateDto struct {
-	Code *string `json:"code" gorm:"column:code" db:"code"`
-	Name *string `json:"name" gorm:"column:name" db:"name"`
+	Code      *string    `json:"code" gorm:"column:code" db:"code"`
+	Name      *string    `json:"name" gorm:"column:name" db:"name"`
+	UpdatedAt *time.Time `json:"updated_at" gorm:"column:updated_at" db:"updated_at"`
 }
 
 func (CountryUpdateDto) TableName() string {

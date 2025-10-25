@@ -26,5 +26,7 @@ func (biz *business) GetCountryByIdBiz(ctx context.Context, id int) (*model.Coun
 			WithError(model.ErrCountryNotFound.Error())
 	}
 
+	data.Mask()
+
 	return data, nil
 }

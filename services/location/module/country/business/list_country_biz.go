@@ -20,5 +20,9 @@ func (biz *business) ListCountryBiz(ctx context.Context,
 			WithDebug(err.Error())
 	}
 
+	for i := range result {
+		result[i].Mask()
+	}
+
 	return result, nil
 }

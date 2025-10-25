@@ -25,5 +25,7 @@ func (biz *business) GetCountryByCodeBiz(ctx context.Context, code string) (*mod
 		return nil, core.ErrNotFound.WithError(model.ErrCountryNotFound.Error())
 	}
 
+	data.Mask()
+
 	return data, nil
 }

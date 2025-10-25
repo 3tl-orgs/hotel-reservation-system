@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,12 +24,14 @@ func (api *api) ListCountryHdl() gin.HandlerFunc {
 
 		var filter model.Filter
 
-		if err := c.ShouldBindQuery(&filter); err != nil {
+		if err := c.ShouldBindJSON(&filter); err != nil {
 			core.WriteErrorResponse(c, core.ErrBadRequest.
 				WithError(err.Error()).
 				WithDebug(err.Error()))
 			return
 		}
+
+		log.Println("filter:", filter)
 
 		data, err := api.business.ListCountryBiz(c, &filter, &pagingData)
 
