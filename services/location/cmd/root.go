@@ -60,6 +60,7 @@ var rootCmd = &cobra.Command{
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	countryApiTransport := composer.NewComposerCountryApiTransport(serviceCtx)
+	provinceApiTransport := composer.NewComposerProvinceApiTransport(serviceCtx)
 	locations := router.Group("/locations")
 	{
 		// countries
@@ -69,6 +70,13 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		locations.GET("/countries", countryApiTransport.ListCountryHdl())
 		locations.GET("/countries/code/:code", countryApiTransport.GetCountryByIdHdl())
 		locations.DELETE("/countries/:id", countryApiTransport.DeleteCountryHdl())
+
+		// provinces
+		locations.GET("/provinces/:id", provinceApiTransport.GetProvinceByIdHdl())
+		locations.POST("/provinces", provinceApiTransport.CreateProvinceHdl())
+		locations.GET("/provinces/code/:code", provinceApiTransport.GetProvinceByCodeHdl())
+		locations.PUT("/provinces/:id", provinceApiTransport.UpdateProvinceHdl())
+		locations.DELETE("/provinces/:id", provinceApiTransport.DeleteProvinceHdl())
 	}
 }
 
