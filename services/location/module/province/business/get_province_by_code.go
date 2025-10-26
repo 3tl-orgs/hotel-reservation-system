@@ -10,9 +10,8 @@ import (
 func (p *provinceBusiness) GetProvinceByCodeBiz(ctx context.Context, code string) (*provincemodel.Province, error) {
 	data, err := p.provinceRepo.GetByCode(ctx, code)
 	if err != nil {
-		if errors.Is(err, core.ErrRecordNotFound) {
-			return nil, core.ErrNotFound.
-				WithError(provincemodel.ErrProvinceNotFound.Error())
+		if errors.Is(err, provincemodel.ErrProvinceNotFound) {
+			return nil, provincemodel.ErrProvinceNotFound
 		}
 		return nil, core.ErrInternalServerError.
 			WithError(provincemodel.ErrCannotGetProvince.Error())

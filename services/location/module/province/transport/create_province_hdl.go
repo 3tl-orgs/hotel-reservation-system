@@ -23,6 +23,7 @@ func (p *provinceTransport) CreateProvinceHdl() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated, core.ResponseData(data))
+		data.Mask()
+		c.JSON(http.StatusCreated, core.ResponseData(data.FakeId))
 	}
 }

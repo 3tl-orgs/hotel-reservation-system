@@ -12,4 +12,6 @@ var (
 	ErrExistingProvince         = errors.New("country already exists")
 	ErrCannotUpdateProvince     = errors.New("cannot update country")
 	ErrCannotDeleteProvince     = errors.New("cannot delete country")
+	ErrProvinceHasBeenDeleted   = errors.New("province has been deleted")
+	ErrIdDuplicated             = errors.New("id already exists")
 )

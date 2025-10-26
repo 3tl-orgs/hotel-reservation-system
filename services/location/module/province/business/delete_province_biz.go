@@ -7,9 +7,20 @@ import (
 )
 
 func (p *provinceBusiness) DeleteProvinceBiz(ctx context.Context, id int) error {
+	oldData, err := p.GetProvinceByIdBiz(ctx, id)
+
+	if err != nil {
+		return provincemodel.ErrProvinceNotFound
+	}
+
+	if oldData.Status == false {
+		return provincemodel.ErrProvinceHasBeenDeleted
+	}
+
 	if err := p.provinceRepo.Delete(ctx, id); err != nil {
 		return core.ErrInternalServerError.
 			WithError(provincemodel.ErrCannotDeleteProvince.Error())
 	}
+
 	return nil
 }
