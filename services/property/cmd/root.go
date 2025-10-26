@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,10 +17,15 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
+	migrationPath, err := filepath.Abs("./services/property/migrations")
+	if err != nil {
+		migrationPath = "./services/property/migrations"
+	}
+
 	return sctx.NewServiceContext(
 		sctx.WithName("Property service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
-		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "")),
+		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
 	)
 }
 
@@ -57,8 +63,8 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	properties := router.Group("/properties")
 	{
 		// amenity
-		properties.POST("/amenity", amenityApiTransport.CreateAmenityHdl())
-		properties.GET("/amenity/:id", amenityApiTransport.GetAmenityByIdsHdl())
+		properties.POST("/amenities", amenityApiTransport.CreateAmenityHdl())
+		properties.GET("/amenities/:id", amenityApiTransport.GetAmenityByIdsHdl())
 	}
 }
 

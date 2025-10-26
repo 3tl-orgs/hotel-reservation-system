@@ -1,0 +1,1 @@
+ALTER TABLE amenities ADD COLUMN type varchar(30) default 'general ';
