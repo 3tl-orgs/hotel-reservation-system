@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/golang-migrate/migrate/v4"
 	sctx "github.com/ngleanhvu/go-booking/shared/srvctx"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/gormc/dialets"
 	"github.com/pkg/errors"
@@ -11,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	_ "github.com/golang-migrate/migrate/v4/database/postgres" // 👈 Và dòng này
+	_ "github.com/golang-migrate/migrate/v4/source/file"       // 👈 Thêm dòng này
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -34,18 +37,20 @@ type GormOpt struct {
 }
 
 type gormDB struct {
-	id     string
-	prefix string
-	logger sctx.Logger
-	db     *gorm.DB
+	id            string
+	prefix        string
+	migrationPath string
+	logger        sctx.Logger
+	db            *gorm.DB
 	*GormOpt
 }
 
-func NewGormDB(id, prefix string) *gormDB {
+func NewGormDB(id, prefix string, migrationPath string) *gormDB {
 	return &gormDB{
-		GormOpt: new(GormOpt),
-		id:      id,
-		prefix:  strings.TrimSpace(prefix),
+		GormOpt:       new(GormOpt),
+		id:            id,
+		prefix:        strings.TrimSpace(prefix),
+		migrationPath: migrationPath,
 	}
 }
 
@@ -117,6 +122,37 @@ func (gdb *gormDB) Activate(_ sctx.ServiceContext) error {
 		return err
 	}
 
+	if err := gdb.RunMigrations(); err != nil {
+		gdb.logger.Error("Migration failed: ", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (gdb *gormDB) RunMigrations() error {
+	if gdb.dsn == "" {
+		return errors.New("missing database DSN for migration")
+	}
+	if gdb.migrationPath == "" {
+		return errors.New("missing migration path")
+	}
+
+	sourceURL := gdb.migrationPath
+	if !strings.HasPrefix(sourceURL, "file://") {
+		sourceURL = fmt.Sprintf("file://%s", sourceURL)
+	}
+
+	m, err := migrate.New(sourceURL, gdb.dsn)
+	if err != nil {
+		return errors.Wrap(err, "failed to create migrate instance")
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return errors.Wrap(err, "failed to run migrations")
+	}
+
+	gdb.logger.Info("Database migrations completed successfully.")
 	return nil
 }
 

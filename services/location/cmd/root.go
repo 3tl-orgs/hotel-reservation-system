@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,10 +17,15 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
+	migrationPath, err := filepath.Abs("./services/location/migrations")
+	if err != nil {
+		migrationPath = "./services/location/migrations"
+	}
+
 	return sctx.NewServiceContext(
 		sctx.WithName("Location service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
-		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "")),
+		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
 	)
 }
 
