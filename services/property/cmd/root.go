@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ngleanhvu/go-booking/services/location/composer"
+	"github.com/ngleanhvu/go-booking/services/property/composer"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	sctx "github.com/ngleanhvu/go-booking/shared/srvctx"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc"
@@ -17,13 +17,13 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
-	migrationPath, err := filepath.Abs("./services/location/migrations")
+	migrationPath, err := filepath.Abs("./services/property/migrations")
 	if err != nil {
-		migrationPath = "./services/location/migrations"
+		migrationPath = "./services/property/migrations"
 	}
 
 	return sctx.NewServiceContext(
-		sctx.WithName("Location service"),
+		sctx.WithName("Property service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
 		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
 	)
@@ -59,24 +59,12 @@ var rootCmd = &cobra.Command{
 }
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
-	countryApiTransport := composer.NewComposerCountryApiTransport(serviceCtx)
-	provinceApiTransport := composer.NewComposerProvinceApiTransport(serviceCtx)
-	locations := router.Group("/locations")
+	amenityApiTransport := composer.ComposerAmenityApiTransport(serviceCtx)
+	properties := router.Group("/properties")
 	{
-		// countries
-		locations.POST("/countries", countryApiTransport.CreateCountryHdl())
-		locations.GET("/countries/:id", countryApiTransport.GetCountryByIdHdl())
-		locations.PUT("/countries/:id", countryApiTransport.UpdateCountryHdl())
-		locations.GET("/countries", countryApiTransport.ListCountryHdl())
-		locations.GET("/countries/code/:code", countryApiTransport.GetCountryByIdHdl())
-		locations.DELETE("/countries/:id", countryApiTransport.DeleteCountryHdl())
-
-		// provinces
-		locations.GET("/provinces/:id", provinceApiTransport.GetProvinceByIdHdl())
-		locations.POST("/provinces", provinceApiTransport.CreateProvinceHdl())
-		locations.GET("/provinces/code/:code", provinceApiTransport.GetProvinceByCodeHdl())
-		locations.PUT("/provinces/:id", provinceApiTransport.UpdateProvinceHdl())
-		locations.DELETE("/provinces/:id", provinceApiTransport.DeleteProvinceHdl())
+		// amenity
+		properties.POST("/amenities", amenityApiTransport.CreateAmenityHdl())
+		properties.GET("/amenities/:id", amenityApiTransport.GetAmenityByIdsHdl())
 	}
 }
 

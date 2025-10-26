@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS room_type_pricings;
+DROP TABLE IF EXISTS room_type_inventories;
+DROP TABLE IF EXISTS refund_policy_rules;
+DROP TABLE IF EXISTS facility_properties;
+DROP TABLE IF EXISTS property_details;
+DROP TABLE IF EXISTS room_types;
+DROP TABLE IF EXISTS hotel_wallets;
+DROP TABLE IF EXISTS facilities;
+DROP TABLE IF EXISTS amenities;
+DROP TABLE IF EXISTS property_types;
+DROP TABLE IF EXISTS properties;
