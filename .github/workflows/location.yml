@@ -52,13 +52,13 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-              APP_NAME=hiholive-auth &&
+              APP_NAME=go-booking -auth &&
               docker rm -f ${APP_NAME} &&
               echo pull &&
-              docker pull caovanhoang204/${APP_NAME}:latest &&
+              docker pull anhvubadai/${APP_NAME}:latest &&
               docker run -d --name ${APP_NAME} \
               --network hiholive \
               -v ${PWD}/.env:/app/.env \
               -v ${PWD}/.log/:/app/.log/ \
-              caovanhoang204/${APP_NAME}:latest
+              anhvubadai/${APP_NAME}:latest
           '
