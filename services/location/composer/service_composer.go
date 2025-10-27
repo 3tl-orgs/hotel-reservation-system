@@ -27,6 +27,7 @@ type ProvinceApiTransport interface {
 	UpdateProvinceHdl() gin.HandlerFunc
 	GetProvinceByCodeHdl() gin.HandlerFunc
 	DeleteProvinceHdl() gin.HandlerFunc
+	ListProvinceHdl() gin.HandlerFunc
 }
 
 func NewComposerCountryApiTransport(sctx srvctx.ServiceContext) CountryApiTransport {
