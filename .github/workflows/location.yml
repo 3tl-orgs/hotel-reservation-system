@@ -41,6 +41,7 @@ jobs:
           context: .
           file: ./services/location/Dockerfile
           push: true
+          tags: hotel-reservation-system/location-booking:latest
 
       # Deploy
 #      - name:  Deploy
