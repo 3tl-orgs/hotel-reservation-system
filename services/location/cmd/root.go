@@ -17,10 +17,10 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
-	migrationPath, err := filepath.Abs("./services/location/migrations")
+	migrationPath, err := filepath.Abs("./services/property/migrations") // => Đứng tại services/location
 	if err != nil {
-		migrationPath = "./services/location/migrations"
-	}
+		migrationPath = "./services/property/migrations"
+	} // => Đứng tại services/location
 
 	return sctx.NewServiceContext(
 		sctx.WithName("Location service"),
@@ -77,6 +77,7 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		locations.GET("/provinces/code/:code", provinceApiTransport.GetProvinceByCodeHdl())
 		locations.PUT("/provinces/:id", provinceApiTransport.UpdateProvinceHdl())
 		locations.DELETE("/provinces/:id", provinceApiTransport.DeleteProvinceHdl())
+		locations.GET("/provinces", provinceApiTransport.ListProvinceHdl())
 	}
 }
 

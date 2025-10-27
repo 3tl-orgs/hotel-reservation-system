@@ -7,6 +7,7 @@ const (
 	KeyCompJWT      = "jwt"
 	KeyCompConf     = "config"
 
+	MaskTypeWard     = 6
 	MaskTypeProvince = 4
 	MaskTypeCountry  = 3
 	MaskTypeAmenity  = 5
