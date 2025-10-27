@@ -44,21 +44,21 @@ jobs:
           tags: go-booking/location-booking:latest
 
       # Deploy
-      - name:  Deploy
-        env:
-          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{ secrets.API_HOST }}
-          USER_NAME: ${{ secrets.SSH_USER_NAME }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-              APP_NAME=go-booking -auth &&
-              docker rm -f ${APP_NAME} &&
-              echo pull &&
-              docker pull anhvubadai/${APP_NAME}:latest &&
-              docker run -d --name ${APP_NAME} \
-              --network hiholive \
-              -v ${PWD}/.env:/app/.env \
-              -v ${PWD}/.log/:/app/.log/ \
-              anhvubadai/${APP_NAME}:latest
-          '
+#      - name:  Deploy
+#        env:
+#          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#          HOSTNAME: ${{ secrets.API_HOST }}
+#          USER_NAME: ${{ secrets.SSH_USER_NAME }}
+#        run: |
+#          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+#          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+#              APP_NAME=go-booking -auth &&
+#              docker rm -f ${APP_NAME} &&
+#              echo pull &&
+#              docker pull anhvubadai/${APP_NAME}:latest &&
+#              docker run -d --name ${APP_NAME} \
+#              --network hiholive \
+#              -v ${PWD}/.env:/app/.env \
+#              -v ${PWD}/.log/:/app/.log/ \
+#              anhvubadai/${APP_NAME}:latest
+#          '
