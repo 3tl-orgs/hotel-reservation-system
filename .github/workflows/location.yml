@@ -29,4 +29,6 @@ jobs:
           context: .
           file: ./services/location/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/go-booking-location:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hotel-reservation-system:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/hotel-reservation-system:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/hotel-reservation-system:buildcache,mode=max
