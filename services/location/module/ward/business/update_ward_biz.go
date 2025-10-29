@@ -13,7 +13,7 @@ func (w *wardBusiness) UpdateWardBiz(ctx context.Context, id int, data *wardsmod
 		return wardsmodel.ErrWardNotFound
 	}
 
-	if existingData.Id != data.Id {
+	if existingData.Id != id {
 		return wardsmodel.ErrWardNotFound
 	}
 
@@ -24,5 +24,6 @@ func (w *wardBusiness) UpdateWardBiz(ctx context.Context, id int, data *wardsmod
 	updatedTime := time.Now()
 	data.UpdatedAt = &updatedTime
 
+	data.Mask()
 	return nil
 }

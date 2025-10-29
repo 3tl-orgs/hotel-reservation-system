@@ -17,10 +17,10 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
-	migrationPath, err := filepath.Abs("./services/property/migrations") // => Đứng tại services/location
+	migrationPath, err := filepath.Abs("./services/property/migrations")
 	if err != nil {
 		migrationPath = "./services/property/migrations"
-	} // => Đứng tại services/location
+	}
 
 	return sctx.NewServiceContext(
 		sctx.WithName("Location service"),
@@ -61,6 +61,8 @@ var rootCmd = &cobra.Command{
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	countryApiTransport := composer.NewComposerCountryApiTransport(serviceCtx)
 	provinceApiTransport := composer.NewComposerProvinceApiTransport(serviceCtx)
+	wardApiTransport := composer.NewComposerWardApiTransport(serviceCtx)
+
 	locations := router.Group("/locations")
 	{
 		// countries
@@ -78,6 +80,14 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		locations.PUT("/provinces/:id", provinceApiTransport.UpdateProvinceHdl())
 		locations.DELETE("/provinces/:id", provinceApiTransport.DeleteProvinceHdl())
 		locations.GET("/provinces", provinceApiTransport.ListProvinceHdl())
+
+		// wards
+		locations.GET("/wards/:id", wardApiTransport.GetWardByIdHdl())
+		locations.POST("/wards", wardApiTransport.CreateWardHdl())
+		locations.GET("wards/code/:code", wardApiTransport.GetWardByCodeHdl())
+		locations.PUT("/wards/:id", wardApiTransport.UpdateWardHdl())
+		locations.DELETE("/wards/:id", wardApiTransport.DeleteWardHdl())
+		locations.GET("/wards", wardApiTransport.ListWardHdl())
 	}
 }
 
