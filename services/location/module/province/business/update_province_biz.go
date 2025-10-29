@@ -10,7 +10,7 @@ import (
 
 func (p *provinceBusiness) UpdateProvinceBiz(ctx context.Context, id int, data *provincemodel.UpdateProvinceDTO) error {
 	existingData, err := p.GetProvinceByIdBiz(ctx, id)
-	
+
 	if err != nil {
 		return provincemodel.ErrProvinceNotFound
 	}
@@ -28,6 +28,7 @@ func (p *provinceBusiness) UpdateProvinceBiz(ctx context.Context, id int, data *
 
 	timeUpdated := time.Now()
 	data.UpdatedAt = &timeUpdated
+	data.Mask()
 
 	return nil
 }

@@ -7,21 +7,10 @@ import (
 	"net/http"
 )
 
-func (w *wardTransport) UpdateWardHdl() gin.HandlerFunc {
+func (w *wardTransport) ListWardHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var data wardsmodel.UpdateWardDTO
-
-		//id, err := strconv.Atoi(c.Param("id"))
-		id, err := core.FromBase58(c.Param("id"))
-		if err != nil {
-			core.WriteErrorResponse(c, core.ErrBadRequest.
-				WithError(err.Error()),
-			)
-			return
-		}
-
-		// Validate
-		if err := c.ShouldBindJSON(&data); err != nil {
+		var pagingData core.Paging
+		if err := c.ShouldBindQuery(&pagingData); err != nil {
 			core.WriteErrorResponse(c, core.ErrBadRequest.
 				WithError(err.Error()).
 				WithDebug(err.Error()),
@@ -29,12 +18,21 @@ func (w *wardTransport) UpdateWardHdl() gin.HandlerFunc {
 			return
 		}
 
-		if err := w.wardBusiness.UpdateWardBiz(c, int(id.GetLocalID()), &data); err != nil {
-			core.WriteErrorResponse(c, err)
+		pagingData.Fulfill()
+		var filter wardsmodel.Filter
+		if err := c.ShouldBindQuery(&filter); err != nil {
+			core.WriteErrorResponse(c, core.ErrBadRequest.
+				WithError(err.Error()).
+				WithDebug(err.Error()),
+			)
 			return
 		}
 
-		c.JSON(http.StatusOK, core.ResponseData(true))
-	}
+		data, err := w.wardBusiness.ListWardBiz(c, &filter, &pagingData)
+		if err != nil {
+			core.WriteErrorResponse(c, err)
+		}
 
+		c.JSON(http.StatusOK, core.SuccessResponse(data, pagingData, filter))
+	}
 }

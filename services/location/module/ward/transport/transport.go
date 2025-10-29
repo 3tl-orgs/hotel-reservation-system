@@ -3,6 +3,7 @@ package wardstransport
 import (
 	"context"
 	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
+	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
 type WardBusiness interface {
@@ -11,6 +12,11 @@ type WardBusiness interface {
 	DeleteWardBiz(ctx context.Context, id int) error
 	GetWardByIdBiz(ctx context.Context, id int) (*wardsmodel.Ward, error)
 	GetWardByCodeBiz(ctx context.Context, code string) (*wardsmodel.Ward, error)
+	ListWardBiz(ctx context.Context,
+		filter *wardsmodel.Filter,
+		paging *core.Paging,
+		moreKeys ...string,
+	) ([]wardsmodel.Ward, error)
 }
 
 type wardTransport struct {

@@ -5,12 +5,13 @@ import (
 	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	"net/http"
-	"strconv"
 )
 
 func (w *wardTransport) GetWardByIdHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id, err := strconv.Atoi(c.Param("id"))
+		//id, err := strconv.Atoi(c.Param("id"))
+
+		id, err := core.FromBase58(c.Param("id"))
 		if err != nil {
 			core.WriteErrorResponse(c, core.ErrBadRequest.
 				WithError(wardsmodel.ErrCannotGetWard.Error()),
@@ -18,7 +19,7 @@ func (w *wardTransport) GetWardByIdHdl() gin.HandlerFunc {
 			return
 		}
 
-		data, err := w.wardBusiness.GetWardByIdBiz(c, id)
+		data, err := w.wardBusiness.GetWardByIdBiz(c, int(id.GetLocalID()))
 		if err != nil {
 			core.WriteErrorResponse(c, err)
 			return

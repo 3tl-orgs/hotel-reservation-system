@@ -8,6 +8,9 @@ import (
 	provincebusiness "github.com/ngleanhvu/go-booking/services/location/module/province/business"
 	provincerepo "github.com/ngleanhvu/go-booking/services/location/module/province/repo"
 	provincetransport "github.com/ngleanhvu/go-booking/services/location/module/province/transport"
+	wardsbusiness "github.com/ngleanhvu/go-booking/services/location/module/ward/business"
+	wardsrepo "github.com/ngleanhvu/go-booking/services/location/module/ward/repo"
+	wardstransport "github.com/ngleanhvu/go-booking/services/location/module/ward/transport"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	"github.com/ngleanhvu/go-booking/shared/srvctx"
 )
@@ -30,6 +33,15 @@ type ProvinceApiTransport interface {
 	ListProvinceHdl() gin.HandlerFunc
 }
 
+type WardApiTransport interface {
+	CreateWardHdl() gin.HandlerFunc
+	GetWardByIdHdl() gin.HandlerFunc
+	UpdateWardHdl() gin.HandlerFunc
+	DeleteWardHdl() gin.HandlerFunc
+	GetWardByCodeHdl() gin.HandlerFunc
+	ListWardHdl() gin.HandlerFunc
+}
+
 func NewComposerCountryApiTransport(sctx srvctx.ServiceContext) CountryApiTransport {
 	countryDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
 	countryRepo := repo.NewPostgresRepo(countryDb.GetDB())
@@ -44,4 +56,12 @@ func NewComposerProvinceApiTransport(sctx srvctx.ServiceContext) ProvinceApiTran
 	provinceBusiness := provincebusiness.NewProvinceBusiness(provinceRepo)
 	provinceTransport := provincetransport.NewProvinceTransport(provinceBusiness)
 	return provinceTransport
+}
+
+func NewComposerWardApiTransport(sctx srvctx.ServiceContext) WardApiTransport {
+	wardDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	wardRepo := wardsrepo.NewWardRepo(wardDb.GetDB())
+	wardBusiness := wardsbusiness.NewWardBusiness(wardRepo)
+	wardTransport := wardstransport.NewWardTransport(wardBusiness)
+	return wardTransport
 }

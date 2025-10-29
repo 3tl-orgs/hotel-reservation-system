@@ -17,5 +17,6 @@ func (p *provinceBusiness) GetProvinceByCodeBiz(ctx context.Context, code string
 			WithError(provincemodel.ErrCannotGetProvince.Error())
 	}
 
+	data.Mask()
 	return data, err
 }

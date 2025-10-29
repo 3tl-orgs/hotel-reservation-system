@@ -17,5 +17,6 @@ func (w *wardBusiness) GetWardByCodeBiz(ctx context.Context, code string) (*ward
 			WithError(wardsmodel.ErrWardNotFound.Error())
 	}
 
+	data.Mask()
 	return data, nil
 }
