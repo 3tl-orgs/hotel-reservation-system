@@ -69,7 +69,7 @@ services:
     ports:
       - "3002:3002"
     volumes:
-      - ./../services/property/migrations:/app/services/property/migrations
+      - ../../services/property/migrations:/app/services/property/migrations
     networks:
       - go-booking
     depends_on:
