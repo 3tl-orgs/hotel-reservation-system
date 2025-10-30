@@ -13,6 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - go-booking
+    restart: always
 
   redis:
     image: redis:6.2.20-alpine
@@ -27,6 +28,7 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       timeout: 5s
       retries: 5
+    restart: always
 
   gateway:
     image: docker.tyk.io/tyk-gateway/tyk-gateway
@@ -41,6 +43,7 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    restart: always
 
   location-service:
     image: anhvubadai/go-booking-location:latest
@@ -57,6 +60,7 @@ services:
       - go-booking
     depends_on:
       - postgres
+    restart: always
 
   property-service:
     image: anhvubadai/go-booking-property:latest
@@ -73,6 +77,7 @@ services:
       - go-booking
     depends_on:
       - postgres
+    restart: always
 
 networks:
   go-booking:
