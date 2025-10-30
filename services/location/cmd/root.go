@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -21,7 +22,7 @@ func newServiceCtx() sctx.ServiceContext {
 	if err != nil {
 		migrationPath = "./services/location/migrations"
 	}
-
+	log.Println("migrationPath:", migrationPath)
 	return sctx.NewServiceContext(
 		sctx.WithName("Location service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
