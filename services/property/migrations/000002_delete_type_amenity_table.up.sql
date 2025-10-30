@@ -1,1 +1,1 @@
-ALTER TABLE amenities DROP COLUMN  type;
+ALTER TABLE amenities DROP COLUMN type;

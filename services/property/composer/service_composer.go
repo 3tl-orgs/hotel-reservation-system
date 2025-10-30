@@ -12,6 +12,10 @@ import (
 type AmenityApiTransport interface {
 	CreateAmenityHdl() gin.HandlerFunc
 	GetAmenityByIdsHdl() gin.HandlerFunc
+	UpdateAmenityHdl() gin.HandlerFunc
+	DeleteAmenityByIdHdl() gin.HandlerFunc
+	GetAmenityByIdHdl() gin.HandlerFunc
+	DeleteAmenityByIdsHdl() gin.HandlerFunc
 }
 
 func ComposerAmenityApiTransport(sctx srvctx.ServiceContext) AmenityApiTransport {

@@ -9,6 +9,10 @@ import (
 type AmenityService interface {
 	GetAmenityByIdsBiz(ctx context.Context, ids []int) ([]model.Amenity, error)
 	CreateAmenityBiz(ctx context.Context, data *model.AmenityCreateDto) error
+	DeleteAmenityByIdsBiz(ctx context.Context, ids []int) error 
+	GetAmenityByIdBiz(ctx context.Context, id int) (*model.Amenity, error)
+	UpdateAmenityBiz(ctx context.Context, id int, data *model.AmenityUpdateDto) error
+	DeleteAmenityByIdBiz(ctx context.Context, id int) error
 }
 
 type amenityApi struct {

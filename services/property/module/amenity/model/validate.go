@@ -1,6 +1,6 @@
 package model
 
-func checkName(name string) error {
+func checkAmenityName(name string) error {
 	if name == "" {
 		return ErrAmenityNameIsEmpty
 	}

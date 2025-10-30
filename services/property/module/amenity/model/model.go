@@ -19,7 +19,7 @@ func (Amenity) TableName() string {
 func (a *Amenity) Validate() error {
 	a.Name = strings.TrimSpace(a.Name)
 
-	if err := checkName(a.Name); err != nil {
+	if err := checkAmenityName(a.Name); err != nil {
 		return err
 	}
 
