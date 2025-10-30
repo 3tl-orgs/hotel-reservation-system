@@ -3,7 +3,6 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15
-    container_name: go-booking-postgres
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
@@ -17,7 +16,6 @@ services:
 
   redis:
     image: redis:6.2.20-alpine
-    container_name: go-booking-redis
     volumes:
       - redis_data:/data
     networks:
@@ -30,42 +28,28 @@ services:
       retries: 5
 
   gateway:
-    image: tykio/tyk-gateway:v5.3.4
-    container_name: go-booking-gateway
+    image: docker.tyk.io/tyk-gateway/tyk-gateway
     ports:
       - "8080:8080"
-    networks:
-      - go-booking
     volumes:
       - ./gateway/tyk.standalone.conf:/opt/tyk-gateway/tyk.conf
       - ./gateway/apps:/opt/tyk-gateway/apps
-    environment:
-      TYK_GW_SECRET: foo
-    depends_on:
-      - redis
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: go-booking-pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@local.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
     networks:
       - go-booking
+    depends_on:
+      redis:
+        condition: service_healthy
 
-  location:
+  location-service:
     image: anhvubadai/go-booking-location:latest
-    container_name: go-booking-location
     environment:
       GIN_PORT: 3001
       DB_DSN: "postgres://admin:admin123@postgres:5432/locationdb?sslmode=disable"
       DB_TYPE: "postgres"
     ports:
       - "3001:3001"
+    volumes:
+      - ./../services/location/migrations:/app/services/location/migrations
     networks:
       - go-booking
     depends_on:
