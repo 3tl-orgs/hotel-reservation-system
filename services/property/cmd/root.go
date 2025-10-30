@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -29,13 +28,28 @@ func newServiceCtx() sctx.ServiceContext {
 	// 	sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
 	// )
 
-	_, b, _, _ := runtime.Caller(0) 
-	basePath := filepath.Join(filepath.Dir(b), "../migrations")
+	//_, b, _, _ := runtime.Caller(0)
+	//basePath := filepath.Join(filepath.Dir(b), "../migrations")
+	//
+	//return sctx.NewServiceContext(
+	//	sctx.WithName("Property service"),
+	//	sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
+	//	sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", basePath)),
+	//)
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	migrationPath := filepath.Join(cwd, "services/property/migrations")
+
+	fmt.Println("Migration path:", migrationPath)
 
 	return sctx.NewServiceContext(
 		sctx.WithName("Property service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
-		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", basePath)),
+		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
 	)
 }
 
@@ -81,7 +95,7 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		//Get by ids, delete by ids -> list ids[] in body
 		// properties.DELETE("/amenities/bulk", amenityApiTransport.DeleteAmenityByIdsHdl())
 		// properties.GET("/amenities/bulk", amenityApiTransport.GetAmenityByIdsHdl())
-		
+
 	}
 }
 
