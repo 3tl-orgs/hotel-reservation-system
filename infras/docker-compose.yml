@@ -3,6 +3,7 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15
+    container_name: postgres
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
@@ -16,6 +17,7 @@ services:
 
   redis:
     image: redis:6.2.20-alpine
+    container_name: redis
     volumes:
       - redis_data:/data
     networks:
@@ -29,6 +31,7 @@ services:
 
   gateway:
     image: docker.tyk.io/tyk-gateway/tyk-gateway
+    container_name: gateway
     ports:
       - "8080:8080"
     volumes:
@@ -42,6 +45,7 @@ services:
 
   location-service:
     image: anhvubadai/go-booking-location:latest
+    container_name: location-service
     environment:
       GIN_PORT: 3001
       DB_DSN: "postgres://admin:admin123@postgres:5432/locationdb?sslmode=disable"
