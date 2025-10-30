@@ -1,48 +1,67 @@
 version: "3.9"
+
 services:
   postgres:
     image: postgres:15
-    container_name: go-booking-postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: locationdb
     ports:
       - "5431:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - go-booking
-  gateway:
-    image: docker.tyk.io/tyk-gateway/tyk-gateway:v5.5.0
-    container_name: go-booking-gateway
-    ports:
-      - 8080:8080
-    networks:
-      - go-booking
-    volumes:
-      - ./gateway/tyk.standalone.conf:/opt/tyk-gateway/tyk.conf
-      - ./gateway/apps:/opt/tyk-gateway/apps
-    environment:
-      - TYK_GW_SECRET=foo
-    depends_on:
-      - redis
+
   redis:
     image: redis:6.2.20-alpine
-    container_name: go-booking-redis
+    container_name: redis
     volumes:
       - redis_data:/data
     networks:
       - go-booking
     ports:
-      - 6379:6379
+      - "6379:6379"
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       timeout: 5s
       retries: 5
 
+  gateway:
+    image: docker.tyk.io/tyk-gateway/tyk-gateway
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./gateway/tyk.standalone.conf:/opt/tyk-gateway/tyk.conf
+      - ./gateway/apps:/opt/tyk-gateway/apps
+    networks:
+      - go-booking
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  location-service:
+    image: anhvubadai/go-booking-location:latest
+    container_name: location-service
+    environment:
+      GIN_PORT: 3001
+      DB_DSN: "postgres://admin:admin123@postgres:5432/locationdb?sslmode=disable"
+      DB_TYPE: "postgres"
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./../services/location/migrations:/app/services/location/migrations
+    networks:
+      - go-booking
+    depends_on:
+      - postgres
+
 networks:
   go-booking:
-    external: true
+    driver: bridge
 
 volumes:
   postgres_data:
