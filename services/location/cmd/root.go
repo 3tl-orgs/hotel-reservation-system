@@ -17,9 +17,9 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
-	migrationPath, err := filepath.Abs("./services/property/migrations")
+	migrationPath, err := filepath.Abs("./services/location/migrations")
 	if err != nil {
-		migrationPath = "./services/property/migrations"
+		migrationPath = "./services/location/migrations"
 	}
 
 	return sctx.NewServiceContext(
