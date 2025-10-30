@@ -59,6 +59,22 @@ services:
     depends_on:
       - postgres
 
+  property-service:
+    image: anhvubadai/go-booking-property:latest
+    container_name: property-service
+    environment:
+      GIN_PORT: 3001
+      DB_DSN: "postgres://admin:admin123@postgres:5432/propertydb?sslmode=disable"
+      DB_TYPE: "postgres"
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./../services/property/migrations:/app/services/property/migrations
+    networks:
+      - go-booking
+    depends_on:
+      - postgres
+
 networks:
   go-booking:
     driver: bridge
