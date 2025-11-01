@@ -22,7 +22,7 @@ type JWTProvider interface {
 	ParseToken(ctx context.Context, tokenString string) (claims *jwt.RegisteredClaims, err error)
 }
 
-type Config interface {
+type GrpcConfig interface {
 	GetGRPCPort() int
 	GetGRPCServerAddress() string
 }

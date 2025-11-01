@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"path/filepath"
 	"time"
@@ -10,11 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ngleanhvu/go-booking/services/location/composer"
 	"github.com/ngleanhvu/go-booking/shared/core"
+	"github.com/ngleanhvu/go-booking/shared/proto/pb"
 	sctx "github.com/ngleanhvu/go-booking/shared/srvctx"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc/middleware"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/gormc"
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
 )
 
 func newServiceCtx() sctx.ServiceContext {
@@ -27,6 +30,7 @@ func newServiceCtx() sctx.ServiceContext {
 		sctx.WithName("Location service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
 		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
+		sctx.WithComponent(NewGrpcConfig()),
 	)
 }
 
@@ -51,6 +55,7 @@ var rootCmd = &cobra.Command{
 
 		v1 := router.Group("/api/v1")
 
+		go StartGRPCServices(serviceCtx)
 		SetupRoutes(v1, serviceCtx)
 
 		if err := router.Run(fmt.Sprintf(":%d", ginComp.GetPort())); err != nil {
@@ -89,6 +94,27 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		locations.PUT("/wards/:id", wardApiTransport.UpdateWardHdl())
 		locations.DELETE("/wards/:id", wardApiTransport.DeleteWardHdl())
 		locations.GET("/wards", wardApiTransport.ListWardHdl())
+	}
+}
+
+func StartGRPCServices(serviceCtx sctx.ServiceContext) {
+	configComp := serviceCtx.MustGet(core.KeyCompGrpcConf).(core.GrpcConfig)
+	logger := serviceCtx.Logger("grpc")
+
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", configComp.GetGRPCPort()))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	logger.Infof("GRPC Server is listening on %d ...\n", configComp.GetGRPCPort())
+
+	s := grpc.NewServer()
+
+	pb.RegisterCountryServiceServer(s, composer.NewCountryGrpcTransport(serviceCtx))
+
+	if err := s.Serve(lis); err != nil {
+		log.Fatalln(err)
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/ngleanhvu/go-booking/services/property/module/amenity/model"
+	"github.com/ngleanhvu/go-booking/shared/dto"
 )
 
 type AmenityRepo interface {
@@ -15,10 +16,15 @@ type AmenityRepo interface {
 	DeleteMany(ctx context.Context, ids []int) error
 }
 
-type business struct {
-	repo AmenityRepo
+type CountryRepo interface {
+	GetCountryById(ctx context.Context, id int32) (*dto.CountryResponse, error)
 }
 
-func NewBusiness(repo AmenityRepo) *business {
-	return &business{repo: repo}
+type business struct {
+	repo        AmenityRepo
+	countryRepo CountryRepo
+}
+
+func NewBusiness(repo AmenityRepo, countryRepo CountryRepo) *business {
+	return &business{repo: repo, countryRepo: countryRepo}
 }

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package country;
+option go_package = "./pb";
+
+message GetCountryByIdRequest {
+  int32 id = 1;
+}
+
+message  CountryResponse {
+  int32 id = 1;
+  string name = 2;
+  string code = 3;
+}
+
+service CountryService {
+  rpc GetCountryByIdHdl(GetCountryByIdRequest) returns (CountryResponse);
+}

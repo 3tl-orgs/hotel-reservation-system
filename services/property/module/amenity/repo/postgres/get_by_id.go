@@ -1,4 +1,4 @@
-package repo
+package postgres
 
 import (
 	"context"
@@ -14,15 +14,13 @@ func (s *postgresRepo) GetById(ctx context.Context, id int) (*model.Amenity, err
 	var amenity model.Amenity
 
 	if err := s.db.WithContext(ctx).Table(model.Amenity{}.TableName()).
-		Where("id = ? AND status = ?", id, true).First(&amenity).Error;
-		err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, core.ErrRecordNotFound
-			}
-
-			return nil, errors.WithStack(err)
+		Where("id = ? AND status = ?", id, true).First(&amenity).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, core.ErrRecordNotFound
 		}
 
+		return nil, errors.WithStack(err)
+	}
 
 	return &amenity, nil
 }

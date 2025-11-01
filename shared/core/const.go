@@ -5,7 +5,7 @@ const (
 	KeyCompGIN      = "gin"
 	KeyCompPostgres = "postgres"
 	KeyCompJWT      = "jwt"
-	KeyCompConf     = "config"
+	KeyCompGrpcConf = "grpc-conf"
 
 	MaskTypeWard     = 6
 	MaskTypeProvince = 4

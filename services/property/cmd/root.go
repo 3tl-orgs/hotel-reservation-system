@@ -35,6 +35,7 @@ func newServiceCtx() sctx.ServiceContext {
 		sctx.WithName("Property service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
 		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
+		sctx.WithComponent(NewGrpcConfig()),
 	)
 }
 
@@ -76,6 +77,7 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		properties.GET("/amenities/:id", amenityApiTransport.GetAmenityByIdHdl())
 		properties.PATCH("/amenities/:id", amenityApiTransport.UpdateAmenityHdl())
 		properties.DELETE("/amenities/:id", amenityApiTransport.DeleteAmenityByIdHdl())
+		properties.GET("/amenities/test-grpc/:id", amenityApiTransport.TestGrpcHdl())
 
 		//Get by ids, delete by ids -> list ids[] in body
 		// properties.DELETE("/amenities/bulk", amenityApiTransport.DeleteAmenityByIdsHdl())

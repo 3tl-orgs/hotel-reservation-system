@@ -1,4 +1,4 @@
-package repo
+package postgres
 
 import (
 	"context"
@@ -26,8 +26,8 @@ func (s *postgresRepo) Update(ctx context.Context, id int, data *model.AmenityUp
 		Table(model.Amenity{}.TableName()).
 		Where("id = ? AND status = ?", id, true).
 		Updates(updateData).Error; err != nil {
-			return errors.WithStack(err)
+		return errors.WithStack(err)
 	}
 
-	return nil;
+	return nil
 }

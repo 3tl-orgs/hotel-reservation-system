@@ -5,6 +5,7 @@ import (
 	"github.com/ngleanhvu/go-booking/services/location/module/country/business"
 	"github.com/ngleanhvu/go-booking/services/location/module/country/repo"
 	"github.com/ngleanhvu/go-booking/services/location/module/country/transport/api"
+	"github.com/ngleanhvu/go-booking/services/location/module/country/transport/rpc"
 	provincebusiness "github.com/ngleanhvu/go-booking/services/location/module/province/business"
 	provincerepo "github.com/ngleanhvu/go-booking/services/location/module/province/repo"
 	provincetransport "github.com/ngleanhvu/go-booking/services/location/module/province/transport"
@@ -12,6 +13,7 @@ import (
 	wardsrepo "github.com/ngleanhvu/go-booking/services/location/module/ward/repo"
 	wardstransport "github.com/ngleanhvu/go-booking/services/location/module/ward/transport"
 	"github.com/ngleanhvu/go-booking/shared/core"
+	"github.com/ngleanhvu/go-booking/shared/proto/pb"
 	"github.com/ngleanhvu/go-booking/shared/srvctx"
 )
 
@@ -64,4 +66,12 @@ func NewComposerWardApiTransport(sctx srvctx.ServiceContext) WardApiTransport {
 	wardBusiness := wardsbusiness.NewWardBusiness(wardRepo)
 	wardTransport := wardstransport.NewWardTransport(wardBusiness)
 	return wardTransport
+}
+
+func NewCountryGrpcTransport(sctx srvctx.ServiceContext) pb.CountryServiceServer {
+	countryDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	countryRepo := repo.NewPostgresRepo(countryDb.GetDB())
+	countryBiz := business.NewBusiness(countryRepo)
+	countryRpc := rpc.NewRpc(countryBiz)
+	return countryRpc
 }
