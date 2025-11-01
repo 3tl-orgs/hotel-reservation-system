@@ -25,3 +25,12 @@ An booking application based on microservice architecture
     + apply a migration for up/down: migrate -database ${POSTGRESQL_URL} -path <path_to_migrations_directory> <up/down> <index>
   
     + See more: https://github.com/golang-migrate/migrate/blob/master/database/postgres/TUTORIAL.md
+- **grpc:**
+    + create a new proto file in folder sheared/proto
+    + run command line: buf.gen.yaml
+    + in grpc have client and server
+    + in server: using core biz in each service to create 
+    + in client: cd repo and create folder rpc folder to create biz for client
+    + using dto in shared/dto to share structure data between client and server
+    + see example in location/country and property/amenity for detail
+    + see more: https://viblo.asia/p/grpc-va-ung-dung-no-trong-microservices-ORNZqo8N50n
