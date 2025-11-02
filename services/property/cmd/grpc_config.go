@@ -35,13 +35,6 @@ func (c *config) InitFlags() {
 		"localhost:3102",
 		"gRPC Address. localhost:3102",
 	)
-
-	flag.StringVar(
-		&c.grpcLocationServerAddress,
-		"grpc-location-server-address",
-		"localhost:3101",
-		"location gRPC server address. Default: localhost:3101",
-	)
 }
 
 func (c *config) Activate(_ sctx.ServiceContext) error {

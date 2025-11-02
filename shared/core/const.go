@@ -1,12 +1,12 @@
 package core
 
 const (
-	KeyCompMySQL          = "mysql"
-	KeyCompGIN            = "gin"
-	KeyCompPostgres       = "postgres"
-	KeyCompJWT            = "jwt"
-	KeyCompGrpcConf       = "grpc-conf"
-	KeyCompLocationClient = "comp-location-client"
+	KeyCompMySQL                 = "mysql"
+	KeyCompGIN                   = "gin"
+	KeyCompPostgres              = "postgres"
+	KeyCompJWT                   = "jwt"
+	KeyCompGrpcConf              = "grpc-conf"
+	KeyCountryCompLocationClient = "country-comp-location-client"
 
 	MaskTypeWard     = 6
 	MaskTypeProvince = 4

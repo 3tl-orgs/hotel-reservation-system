@@ -27,7 +27,6 @@ type ServiceContext interface {
 	MustGet(id string) interface{}
 	Get(id string) (interface{}, bool)
 	Logger(prefix string) Logger
-	Set(id string, value interface{})
 	EnvName() string
 	GetName() string
 	Stop() error
@@ -38,14 +37,14 @@ type serviceCtx struct {
 	name       string
 	env        string
 	components []Component
-	store      map[string]interface{}
+	store      map[string]Component
 	cmdLine    *AppFlagSet
 	logger     Logger
 }
 
 func NewServiceContext(opts ...Option) ServiceContext {
 	sv := &serviceCtx{
-		store: make(map[string]interface{}),
+		store: make(map[string]Component),
 	}
 
 	sv.components = []Component{defaultLogger}
@@ -157,8 +156,4 @@ func (s *serviceCtx) parseFlags() {
 	}
 
 	s.cmdLine.Parse([]string{})
-}
-
-func (s *serviceCtx) Set(id string, value interface{}) {
-	s.store[id] = value
 }

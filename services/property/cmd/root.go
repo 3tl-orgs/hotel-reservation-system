@@ -8,12 +8,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ngleanhvu/go-booking/services/property/composer"
-	"github.com/ngleanhvu/go-booking/services/property/composer/client"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	sctx "github.com/ngleanhvu/go-booking/shared/srvctx"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc/middleware"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/gormc"
+	"github.com/ngleanhvu/go-booking/shared/srvctx/component/grpcclient"
 	"github.com/spf13/cobra"
 )
 
@@ -28,6 +28,7 @@ func newServiceCtx() sctx.ServiceContext {
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
 		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
 		sctx.WithComponent(NewGrpcConfig()),
+		sctx.WithComponent(grpcclient.NewCountryRPCClientComponent(core.KeyCountryCompLocationClient, "")),
 	)
 }
 
@@ -43,10 +44,6 @@ var rootCmd = &cobra.Command{
 		if err := serviceCtx.Load(); err != nil {
 			logger.Fatal(err)
 		}
-
-		// ✅ Đăng ký Location gRPC client một lần duy nhất
-		locationClient := client.ComposerCountryRpcClient(serviceCtx)
-		serviceCtx.Set(core.KeyCompLocationClient, locationClient)
 
 		ginComp := serviceCtx.MustGet(core.KeyCompGIN).(core.GINComponent)
 		router := ginComp.GetRouter()

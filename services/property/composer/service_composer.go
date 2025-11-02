@@ -24,7 +24,7 @@ func ComposerAmenityApiTransport(sctx srvctx.ServiceContext) AmenityApiTransport
 	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
 	amenityRepo := postgres.NewPostgresRepo(db.GetDB())
 
-	locationClient := sctx.MustGet(core.KeyCompLocationClient).(client.CountryRPCClient)
+	locationClient := sctx.MustGet(core.KeyCountryCompLocationClient).(client.CountryRPCClient)
 
 	amenityService := biz.NewBusiness(amenityRepo, locationClient)
 	amenityApi := api.NewAmenityApi(amenityService)
