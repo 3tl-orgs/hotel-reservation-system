@@ -5,6 +5,9 @@ import (
 	"github.com/ngleanhvu/go-booking/services/property/module/amenity/biz"
 	"github.com/ngleanhvu/go-booking/services/property/module/amenity/repo/postgres"
 	"github.com/ngleanhvu/go-booking/services/property/module/amenity/transport/api"
+	facilitypropertiesbiz "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/biz"
+	facilitypropertiesrepo "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/repo"
+	facilitypropertiesapi "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/transport/api"
 	propertyTypeBiz "github.com/ngleanhvu/go-booking/services/property/module/propertytype/biz"
 	propertyTypeRepo1 "github.com/ngleanhvu/go-booking/services/property/module/propertytype/repo"
 	propertyTypeTransport "github.com/ngleanhvu/go-booking/services/property/module/propertytype/transport/api"
@@ -37,6 +40,23 @@ func ComposerAmenityApiTransport(sctx srvctx.ServiceContext) AmenityApiTransport
 	amenityService := biz.NewBusiness(amenityRepo, locationClient)
 	amenityApi := api.NewAmenityApi(amenityService)
 	return amenityApi
+}
+
+type FacilityPropertiesApiTransport interface {
+	CreateFacilityPropHdl() gin.HandlerFunc
+	UpdateFacilityPropHdl() gin.HandlerFunc
+	GetFacilityPropByIdHdl() gin.HandlerFunc
+	DeleteFacilityPropHdl() gin.HandlerFunc
+	ListFacilityPropHdl() gin.HandlerFunc
+	GetFacilityByPropHdl() gin.HandlerFunc
+}
+
+func ComposerFacilityPropertiesApiTransport(sctx srvctx.ServiceContext) FacilityPropertiesApiTransport {
+	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	facilityPropertiesRepo := facilitypropertiesrepo.NewFacilityPropertiesRepo(db.GetDB())
+	facilityPropertiesBiz := facilitypropertiesbiz.NewFacilityPropertiesRepo(facilityPropertiesRepo)
+	facilityPropertiesTransport := facilitypropertiesapi.NewFacilityPropertiesTransport(facilityPropertiesBiz)
+	return facilityPropertiesTransport
 }
 
 func ComposerPropertTypeApiTransport(sctx srvctx.ServiceContext) PropertyTypeApiTransport {
