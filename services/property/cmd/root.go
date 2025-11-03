@@ -60,13 +60,19 @@ var rootCmd = &cobra.Command{
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	amenityApiTransport := composer.ComposerAmenityApiTransport(serviceCtx)
+	propertyTypeApiTransport := composer.ComposerPropertTypeApiTransport(serviceCtx)
 	properties := router.Group("/properties")
 	{
+		// amenity
 		properties.POST("/amenities", amenityApiTransport.CreateAmenityHdl())
 		properties.GET("/amenities/:id", amenityApiTransport.GetAmenityByIdHdl())
 		properties.PATCH("/amenities/:id", amenityApiTransport.UpdateAmenityHdl())
 		properties.DELETE("/amenities/:id", amenityApiTransport.DeleteAmenityByIdHdl())
 		properties.GET("/amenities/test-grpc/:id", amenityApiTransport.TestGrpcHdl())
+
+		// property type
+		properties.GET("/property-types/:id", propertyTypeApiTransport.GetPropertyTypeByIdHdl())
+		properties.POST("/property-types", propertyTypeApiTransport.CreatePropertyTypeHdl())
 	}
 }
 
