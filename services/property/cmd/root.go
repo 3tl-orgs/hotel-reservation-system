@@ -60,14 +60,26 @@ var rootCmd = &cobra.Command{
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	amenityApiTransport := composer.ComposerAmenityApiTransport(serviceCtx)
+	facilityPropertiesApiTransport := composer.ComposerFacilityPropertiesApiTransport(serviceCtx)
+
 	properties := router.Group("/properties")
 	{
+		// Amenities API
 		properties.POST("/amenities", amenityApiTransport.CreateAmenityHdl())
 		properties.GET("/amenities/:id", amenityApiTransport.GetAmenityByIdHdl())
 		properties.PATCH("/amenities/:id", amenityApiTransport.UpdateAmenityHdl())
 		properties.DELETE("/amenities/:id", amenityApiTransport.DeleteAmenityByIdHdl())
 		properties.GET("/amenities/test-grpc/:id", amenityApiTransport.TestGrpcHdl())
+
+		// Facility_Properties API
+		properties.POST("/facility-properties", facilityPropertiesApiTransport.CreateFacilityPropHdl())
+		properties.PATCH("/facility-properties/:id", facilityPropertiesApiTransport.UpdateFacilityPropHdl())
+		properties.DELETE("/facility-properties/:id", facilityPropertiesApiTransport.DeleteFacilityPropHdl())
+		properties.GET("/facility-properties/:id", facilityPropertiesApiTransport.GetFacilityPropByIdHdl())
+		properties.GET("/facility-properties", facilityPropertiesApiTransport.ListFacilityPropHdl())
+		properties.GET("/facility-properties/facilities/:id", facilityPropertiesApiTransport.GetFacilityByPropHdl())
 	}
+
 }
 
 func Execute() {
