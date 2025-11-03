@@ -17,7 +17,7 @@ func (api *propertyTypeApi) CreatePropertyTypeHdl() gin.HandlerFunc {
 					WithDebug(err.Error())))
 		}
 
-		if err := api.propertyService.CreatePropertyTypeBiz(c, data); err != nil {
+		if err := api.propertyService.CreatePropertyTypeBiz(c, &data); err != nil {
 			c.JSON(500, core.Error(500, "", err))
 		}
 
