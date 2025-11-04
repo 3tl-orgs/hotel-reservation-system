@@ -15,7 +15,7 @@ func (w *wardRepo) ListData(
 	moreKeys ...string,
 ) ([]wardsmodel.Ward, error) {
 	var result []wardsmodel.Ward
-	db := w.db.Table(wardsmodel.Ward{}.TableName()).Where("status is true")
+	db := w.db.Table(wardsmodel.Ward{}.TableName()).Where("status = true")
 
 	if f := filter; f != nil {
 		keyword := strings.TrimSpace(f.Keyword)

@@ -26,3 +26,11 @@ type FacilityResponse struct {
 	CreatedAt  time.Time          `json:"created_at" gorm:"column:created_at"`
 	UpdatedAt  time.Time          `json:"updated_at" gorm:"column:updated_at"`
 }
+
+func (fp *FacilityProperties) Validate() error {
+	if fp.FacilityId <= 0 || fp.PropertyId <= 0 {
+		return ErrIdOrAmenitiesNotAccepted
+	}
+	
+	return nil
+}

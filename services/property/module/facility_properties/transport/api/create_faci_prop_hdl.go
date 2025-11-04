@@ -19,6 +19,13 @@ func (fp *FacilityPropertiesTransport) CreateFacilityPropHdl() gin.HandlerFunc {
 			return
 		}
 
+		if err := data.Validate(); err != nil {
+			core.WriteErrorResponse(c, core.ErrBadRequest.
+				WithError(err.Error()),
+			)
+			return
+		}
+
 		// Marshal
 		//jSon, _ := json.Marshal(body.AmenityIds)
 		//

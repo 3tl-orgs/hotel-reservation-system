@@ -17,6 +17,14 @@ func (fp *FacilityPropertiesCreateDTO) Mask() {
 	fp.SQLModel.Mask(core.MaskTypeFacilityProperties)
 }
 
+func (fp *FacilityPropertiesCreateDTO) Validate() error {
+	if fp.FacilityId <= 0 || fp.PropertyId <= 0 {
+		return ErrIdOrAmenitiesNotAccepted
+	}
+
+	return nil
+}
+
 type FacilityPropertiesUpdateDTO struct {
 	core.SQLModel
 	Status     *bool               `json:"status" gorm:"column:status"`
