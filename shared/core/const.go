@@ -17,4 +17,5 @@ const (
 	MaskTypeTask               = 2
 	EntityDeleted              = false
 	MaskTypeFacilityProperties = 7
+	MaskTypeRoomType           = 11
 )
