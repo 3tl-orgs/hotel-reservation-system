@@ -32,6 +32,7 @@ type AmenityApiTransport interface {
 type PropertyTypeApiTransport interface {
 	CreatePropertyTypeHdl() gin.HandlerFunc
 	GetPropertyTypeByIdHdl() gin.HandlerFunc
+	ListPropertyTypeHdl() gin.HandlerFunc
 }
 
 type RoomTypeApiTransport interface {

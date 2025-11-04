@@ -77,6 +77,7 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		// property type
 		properties.GET("/property-types/:id", propertyTypeApiTransport.GetPropertyTypeByIdHdl())
 		properties.POST("/property-types", propertyTypeApiTransport.CreatePropertyTypeHdl())
+		properties.GET("/property-types/all", propertyTypeApiTransport.ListPropertyTypeHdl())
 
 		// Facility_Properties API
 		properties.POST("/facility-properties", facilityPropertiesApiTransport.CreateFacilityPropHdl())
