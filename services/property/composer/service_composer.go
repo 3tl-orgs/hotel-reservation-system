@@ -29,6 +29,7 @@ type AmenityApiTransport interface {
 type PropertyTypeApiTransport interface {
 	CreatePropertyTypeHdl() gin.HandlerFunc
 	GetPropertyTypeByIdHdl() gin.HandlerFunc
+	ListPropertyTypeHdl() gin.HandlerFunc
 }
 
 func ComposerAmenityApiTransport(sctx srvctx.ServiceContext) AmenityApiTransport {
