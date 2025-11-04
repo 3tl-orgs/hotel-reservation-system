@@ -8,6 +8,9 @@ import (
 	facilitypropertiesbiz "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/biz"
 	facilitypropertiesrepo "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/repo"
 	facilitypropertiesapi "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/transport/api"
+	propertybiz "github.com/ngleanhvu/go-booking/services/property/module/property/biz"
+	propertyrepo "github.com/ngleanhvu/go-booking/services/property/module/property/repo"
+	propertyapi "github.com/ngleanhvu/go-booking/services/property/module/property/transport/api"
 	propertyTypeBiz "github.com/ngleanhvu/go-booking/services/property/module/propertytype/biz"
 	propertyTypeRepo1 "github.com/ngleanhvu/go-booking/services/property/module/propertytype/repo"
 	propertyTypeTransport "github.com/ngleanhvu/go-booking/services/property/module/propertytype/transport/api"
@@ -66,4 +69,21 @@ func ComposerPropertTypeApiTransport(sctx srvctx.ServiceContext) PropertyTypeApi
 	propertyTypeService := propertyTypeBiz.NewBusiness(propertyTypeRepo)
 	propertyTypeApi := propertyTypeTransport.NewPropertyTypeApi(propertyTypeService)
 	return propertyTypeApi
+}
+
+// PropertyApiTransport => adapter Property
+type PropertyApiTransport interface {
+	CreatePropertyHdl() gin.HandlerFunc
+	UpdatePropertyHdl() gin.HandlerFunc
+	DeletePropertyHdl() gin.HandlerFunc
+	GetPropertyByIdHdl() gin.HandlerFunc
+	ListPropertyHdl() gin.HandlerFunc
+}
+
+func ComposerPropertyApiTransport(sctx srvctx.ServiceContext) PropertyApiTransport {
+	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	propertyRepo := propertyrepo.NewPropertyRepo(db.GetDB())
+	propertyBiz := propertybiz.NewPropertyBusiness(propertyRepo)
+	propertyTransport := propertyapi.NewPropertyTransport(propertyBiz)
+	return propertyTransport
 }
