@@ -18,10 +18,13 @@ func (r *RoomTypeTransport) CreateRoomTypeHdl() gin.HandlerFunc {
 			return
 		}
 
+		if err := data.Validate(); err != nil {
+			core.WriteErrorResponse(c, err)
+			return
+		}
+
 		if err := r.roomTypeBusiness.CreateRoomTypeBiz(c, &data); err != nil {
-			core.WriteErrorResponse(c, core.ErrInternalServerError.
-				WithError(err.Error()),
-			)
+			core.WriteErrorResponse(c, err)
 			return
 		}
 

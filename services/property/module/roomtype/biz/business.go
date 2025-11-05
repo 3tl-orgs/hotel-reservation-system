@@ -16,6 +16,8 @@ type RoomTypeRepo interface {
 		filter *roomtypemodel.Filter,
 		moreKeys ...string,
 	) ([]roomtypemodel.RoomType, error)
+	ExistByPropertyAndName(ctx context.Context, propertyId int, name string) bool
+	GetRoomTypes(ctx context.Context, propertyId int) ([]roomtypemodel.RoomType, error)
 }
 
 type roomTypeBusiness struct {

@@ -16,6 +16,7 @@ type roomTypeBusiness interface {
 		filter *roomtypemodel.Filter,
 		moreKeys ...string,
 	) ([]roomtypemodel.RoomType, error)
+	GetRoomTypeByProp(ctx context.Context, propertyId int) ([]roomtypemodel.RoomType, error)
 }
 
 type RoomTypeTransport struct {

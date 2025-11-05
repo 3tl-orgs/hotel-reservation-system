@@ -93,6 +93,7 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		properties.PATCH("/roomtypes/:id", roomTypeApiTransport.UpdateRoomTypeHdl())
 		properties.DELETE("/roomtypes/:id", roomTypeApiTransport.DeleteRoomTypeHdl())
 		properties.GET("/roomtypes", roomTypeApiTransport.ListRoomTypeHdl())
+		properties.GET("/roomtypes/property/:id", roomTypeApiTransport.GetRoomTypeByPropHdl())
 	}
 
 }

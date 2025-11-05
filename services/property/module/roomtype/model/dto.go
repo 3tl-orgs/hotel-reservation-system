@@ -1,22 +1,25 @@
 package roomtypemodel
 
-import "github.com/ngleanhvu/go-booking/shared/core"
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ngleanhvu/go-booking/shared/core"
+)
 
 type RoomTypeCreateDTO struct {
 	core.SQLModel
-	PropertyId    int                `json:"property_id" gorm:"column:property_id"`
-	Name          string             `json:"name" gorm:"column:name"`
+	PropertyId    int                `json:"property_id" gorm:"column:property_id" validate:"required,gt=0"`
+	Name          string             `json:"name" gorm:"column:name" validate:"required,min=3,max=100"`
 	Description   string             `json:"description" gorm:"column:description"`
-	Images        core.JsonTypeArray `json:"images" gorm:"column:images"`
-	TotalRooms    int                `json:"total_rooms" gorm:"column:total_rooms"`
+	Images        core.JsonTypeArray `json:"images" gorm:"column:images" validate:"omitempty"`
+	TotalRooms    int                `json:"total_rooms" gorm:"column:total_rooms" validate:"required,gt=0"`
 	MaxAdults     int                `json:"max_adults" gorm:"column:max_adults"`
 	MaxChildren   int                `json:"max_children" gorm:"column:max_children"`
-	BasePrice     float64            `json:"base_price" gorm:"column:base_price"`
+	BasePrice     float64            `json:"base_price" gorm:"column:base_price" validate:"required,gt=0"`
 	PayBefore     bool               `json:"pay_before" gorm:"column:pay_before"`
 	BedType       string             `json:"bed_type" gorm:"column:bed_type"`
 	PayType       string             `json:"pay_type" gorm:"column:pay_type"`
-	BestAmenities core.JsonTypeArray `json:"best_amenities" gorm:"column:best_amenities"`
-	Amenities     core.JsonTypeArray `json:"amenities" gorm:"column:amenities"`
+	BestAmenities core.JsonTypeArray `json:"best_amenities" gorm:"column:best_amenities" validate:"omitempty"`
+	Amenities     core.JsonTypeArray `json:"amenities" gorm:"column:amenities" validate:"omitempty"`
 }
 
 func (RoomTypeCreateDTO) TableName() string {
@@ -25,6 +28,15 @@ func (RoomTypeCreateDTO) TableName() string {
 
 func (r *RoomTypeCreateDTO) Mask() {
 	r.SQLModel.Mask(core.MaskTypeRoomType)
+}
+
+func (r *RoomTypeCreateDTO) Validate() error {
+	if err := validator.New().Struct(r); err != nil {
+		return core.ErrConflict.
+			WithError(ErrInputData.Error())
+	}
+
+	return nil
 }
 
 type RoomTypeUpdateDTO struct {

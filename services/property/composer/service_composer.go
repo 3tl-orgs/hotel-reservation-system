@@ -41,6 +41,7 @@ type RoomTypeApiTransport interface {
 	UpdateRoomTypeHdl() gin.HandlerFunc
 	GetRoomTypeByIdHdl() gin.HandlerFunc
 	ListRoomTypeHdl() gin.HandlerFunc
+	GetRoomTypeByPropHdl() gin.HandlerFunc
 }
 
 func ComposerAmenityApiTransport(sctx srvctx.ServiceContext) AmenityApiTransport {
