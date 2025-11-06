@@ -69,6 +69,11 @@ services:
       GIN_PORT: 3002
       DB_DSN: "postgres://admin:admin123@postgres:5432/propertydb?sslmode=disable"
       DB_TYPE: "postgres"
+      R2_BUCKET_NAME: "hotel-reservation-system"
+      R2_ACCESS_KEY_ID: "88949bc0a7c91a271ac0c4dcbc8e54a1"
+      R2_SECRET_ACCESS_KEY: "3eae798eb21b6ec71d6c145dd27dae247b2a914a04919edde28ffb845c3a72d3"
+      R2_ACCOUNT_ID: "a5723c0a72ea39835429c85468efd6ad"   
+      R2_PUBLIC_DOMAIN: "https://a5723c0a72ea39835429c85468efd6ad.r2.cloudflarestorage.com/hotel-reservation-system"
     ports:
       - "3002:3002"
     volumes:

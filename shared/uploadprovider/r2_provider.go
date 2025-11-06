@@ -11,43 +11,45 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/ngleanhvu/go-booking/shared/core"
-
-	"log"
 )
 
-type s3Provider struct {
+type r2Provider struct {
 	bucketName string
-	region     string
-	apiKey     string
-	secret     string
+	accountId  string
+	accessKey  string
+	secretKey  string
 	domain     string
 	session    *session.Session
 }
 
-func NewS3Provider(bucketName string, region string, apiKey string, secret string, domain string) *s3Provider {
-	provider := &s3Provider{
-		bucketName: bucketName,
-		region:     region,
-		apiKey:     apiKey,
-		secret:     secret,
-		domain:     domain,
+func NewR2Provider(bucketName, accountId, accessKey, secretKey, domain string) *r2Provider {
+	endpoint := fmt.Sprintf("https://%s.r2.cloudflarestorage.com", accountId)
+
+	provider := &r2Provider{
+		bucketName:   bucketName,
+		accountId:    accountId,
+		accessKey:    accessKey,
+		secretKey:    secretKey,
+		domain: domain,
 	}
-	s3Session, err := session.NewSession(&aws.Config{
-		Region: aws.String(provider.region),
-		Credentials: credentials.NewStaticCredentials(
-			provider.apiKey, // Access key ID
-			provider.secret, // Secret access key
-			""),             // Token
+
+	sess, err := session.NewSession(&aws.Config{
+		Region:           aws.String("auto"), // R2 không cần region thật
+		Endpoint:         aws.String(endpoint),
+		S3ForcePathStyle: aws.Bool(true),
+		Credentials:      credentials.NewStaticCredentials(accessKey, secretKey, ""),
 	})
+
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	provider.session = s3Session
-	return provider
+
+	provider.session = sess
+	return provider 
 }
 
 // SaveFileUploaded receives data and stores it into aws s3
-func (provider *s3Provider) SaveFileUploaded(ctx context.Context, file io.Reader, dst string) (*core.Image, error) {
+func (provider *r2Provider) SaveFileUploaded(ctx context.Context, file io.Reader, dst string) (*core.Image, error) {
 	buf := make([]byte, 512)
     n, _ := file.Read(buf)
 
@@ -58,11 +60,10 @@ func (provider *s3Provider) SaveFileUploaded(ctx context.Context, file io.Reader
 	_, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(provider.bucketName),
 		Key:    aws.String(dst),
-		ACL:    aws.String("private"),
+		ACL:    aws.String("public-read"),
 		Body:   file, 
 	})
-
-
+	
 	//req, _ := s3.New(provider.session).PutObjectRequest(&s3.PutObjectInput{
 	//	Bucket: aws.String(provider.bucketName),
 	//	Key:    aws.String(dst),

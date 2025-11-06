@@ -21,14 +21,14 @@ func (img *Image) Fulfill(domain string) {
 	img.FileName = fmt.Sprintf("%s/%s", domain, img.FileName)
 }
 
-func (img *Image) Scan(value interface{}) error {
+func (img *Image) Scan(value interface{}) error { //Từ db -> scan -> trả ra value
 	bytes, ok := value.([]byte)
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("Failed to unmarshal data from DB: %s", value)))
 	}
 
 	var i Image
-	if err := json.Unmarshal(bytes, &img); err != nil {
+	if err := json.Unmarshal(bytes, &i); err != nil {
 		return errors.WithStack(err)
 	}
 
