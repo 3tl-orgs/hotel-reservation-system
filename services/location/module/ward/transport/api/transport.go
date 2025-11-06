@@ -1,7 +1,8 @@
-package wardstransport
+package api
 
 import (
 	"context"
+
 	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 )

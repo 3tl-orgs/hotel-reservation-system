@@ -1,19 +1,29 @@
 package propertymodel
 
-import "github.com/ngleanhvu/go-booking/shared/core"
+import (
+	"net/http"
+	"time"
+
+	"github.com/ngleanhvu/go-booking/shared/core"
+)
 
 type PropertyCreateDTO struct {
 	core.SQLModel
-	Name           string  `form:"name" gorm:"column:name"`
-	Star           float32 `form:"star_rating" gorm:"column:star_rating"`
-	Address        string  `form:"address" gorm:"column:address"`
-	CountryId      int     `form:"country_id" gorm:"column:country_id"`
-	ProvinceId     int     `form:"province_id" gorm:"column:province_id"`
-	WardId         int     `form:"ward_id" gorm:"column:ward_id"`
-	Thumbnail      string  `form:"thumbnail" gorm:"column:thumbnail"`
-	Lat            float64 `form:"lat" gorm:"column:lat"`
-	Lng            float64 `form:"lng" gorm:"column:lng"`
-	PropertyTypeId int     `form:"property_type_id" gorm:"column:property_type_id"`
+	Name           string      `form:"name" gorm:"column:name"`
+	Star           float32     `form:"star_rating" gorm:"column:star_rating"`
+	Address        string      `form:"address" gorm:"column:address"`
+	CountryId      int         `form:"country_id" gorm:"column:country_id"`
+	ProvinceId     int         `form:"province_id" gorm:"column:province_id"`
+	WardId         int         `form:"ward_id" gorm:"column:ward_id"`
+	Thumbnail      http.File   `form:"thumbnail" gorm:"column:thumbnail"`
+	Lat            float64     `form:"lat" gorm:"column:lat"`
+	Lng            float64     `form:"lng" gorm:"column:lng"`
+	PropertyTypeId int         `form:"property_type_id" gorm:"column:property_type_id"`
+	Description    string      `form:"description" gorm:"column:description"`
+	Images         []http.File `form:"images" gorm:"column:images"`
+	CheckInTime    time.Time   `form:"check_in_time" gorm:"column:check_in_time"`
+	CheckoutTime   time.Time   `form:"checkout_time" gorm:"column:checkout_time"`
+	Hotline        string      `form:"hotline" gorm:"column:hotline"`
 }
 
 func (PropertyCreateDTO) TableName() string {

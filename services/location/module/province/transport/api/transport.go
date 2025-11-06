@@ -1,7 +1,8 @@
-package provincetransport
+package api
 
 import (
 	"context"
+
 	provincemodel "github.com/ngleanhvu/go-booking/services/location/module/province/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 )

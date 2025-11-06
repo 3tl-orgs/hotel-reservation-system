@@ -1,11 +1,12 @@
-package wardstransport
+package api
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
-	"net/http"
-	"strings"
 )
 
 func (w *wardTransport) GetWardByCodeHdl() gin.HandlerFunc {
@@ -22,7 +23,7 @@ func (w *wardTransport) GetWardByCodeHdl() gin.HandlerFunc {
 			core.WriteErrorResponse(c, err)
 			return
 		}
-		
+
 		c.JSON(http.StatusOK, core.ResponseData(data))
 	}
 }

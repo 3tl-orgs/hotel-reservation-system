@@ -1,10 +1,11 @@
-package wardstransport
+package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
-	"net/http"
 )
 
 func (w *wardTransport) CreateWardHdl() gin.HandlerFunc {

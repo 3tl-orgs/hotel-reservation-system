@@ -1,13 +1,14 @@
-package wardstransport
+package api
 
 import (
-	"github.com/gin-gonic/gin"
-	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
-	"github.com/ngleanhvu/go-booking/shared/core"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	provincemodel "github.com/ngleanhvu/go-booking/services/location/module/province/model"
+	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
-func (w *wardTransport) ListWardHdl() gin.HandlerFunc {
+func (p *provinceTransport) ListProvinceHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var pagingData core.Paging
 		if err := c.ShouldBindQuery(&pagingData); err != nil {
@@ -17,9 +18,9 @@ func (w *wardTransport) ListWardHdl() gin.HandlerFunc {
 			)
 			return
 		}
-
 		pagingData.Fulfill()
-		var filter wardsmodel.Filter
+
+		var filter provincemodel.Filter
 		if err := c.ShouldBindQuery(&filter); err != nil {
 			core.WriteErrorResponse(c, core.ErrBadRequest.
 				WithError(err.Error()).
@@ -27,8 +28,7 @@ func (w *wardTransport) ListWardHdl() gin.HandlerFunc {
 			)
 			return
 		}
-
-		data, err := w.wardBusiness.ListWardBiz(c, &filter, &pagingData)
+		data, err := p.provinceBusiness.ListProvinceBiz(c, &filter, &pagingData)
 		if err != nil {
 			core.WriteErrorResponse(c, err)
 		}

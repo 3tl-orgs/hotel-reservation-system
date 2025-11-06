@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package province;
+option go_package = "./pb";
+
+message GetProvinceByIdRequest {
+  int32 id = 1;
+}
+
+message ProvinceResponse {
+  int32 id = 1;
+  string name = 2;
+  string code = 3;
+  int32 country_id = 4;
+}
+
+service ProvinceService {
+  rpc GetProvinceByIdHdl(GetProvinceByIdRequest) returns (ProvinceResponse);
+}
+
+

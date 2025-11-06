@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ward;
+option go_package = "./pb";
+
+message GetWardByIdRequest {
+  int32 id = 1;
+}
+
+message WardResponse {
+  int32 id = 1;
+  string name = 2;
+  string code = 3;
+  int32 province_id = 4;
+}
+
+service WardService {
+  rpc GetWardByIdHdl(GetWardByIdRequest) returns(WardResponse);
+}

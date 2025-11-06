@@ -4,8 +4,9 @@ import "github.com/ngleanhvu/go-booking/shared/core"
 
 type Property struct {
 	core.SQLModel
-	Name           string  `json:"name" gorm:"column:name"`
-	Star           float32 `json:"star_rating" gorm:"column:star_rating"`
+	Name string  `json:"name" gorm:"column:name"`
+	Star float32 `json:"star_rating" gorm:"column:star_rating"`
+	
 	Address        string  `json:"address" gorm:"column:address"`
 	CountryId      int     `json:"country_id" gorm:"column:country_id"`
 	ProvinceId     int     `json:"province_id" gorm:"column:province_id"`

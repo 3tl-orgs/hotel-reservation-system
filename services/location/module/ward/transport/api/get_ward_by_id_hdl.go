@@ -1,13 +1,14 @@
-package wardstransport
+package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
-	"net/http"
 )
 
-func (w *wardTransport) DeleteWardHdl() gin.HandlerFunc {
+func (w *wardTransport) GetWardByIdHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//id, err := strconv.Atoi(c.Param("id"))
 
@@ -19,13 +20,12 @@ func (w *wardTransport) DeleteWardHdl() gin.HandlerFunc {
 			return
 		}
 
-		if err := w.wardBusiness.DeleteWardBiz(c, int(id.GetLocalID())); err != nil {
-			core.WriteErrorResponse(c, core.ErrNotFound.
-				WithError(err.Error()).
-				WithDebug(err.Error()))
+		data, err := w.wardBusiness.GetWardByIdBiz(c, int(id.GetLocalID()))
+		if err != nil {
+			core.WriteErrorResponse(c, err)
 			return
 		}
 
-		c.JSON(http.StatusOK, core.ResponseData(true))
+		c.JSON(http.StatusOK, core.ResponseData(data))
 	}
 }

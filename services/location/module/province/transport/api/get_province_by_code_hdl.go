@@ -1,10 +1,11 @@
-package provincetransport
+package api
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/ngleanhvu/go-booking/shared/core"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
 func (p *provinceTransport) GetProvinceByCodeHdl() gin.HandlerFunc {

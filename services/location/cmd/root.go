@@ -3,21 +3,17 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"net"
 	"os"
 	"path/filepath"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ngleanhvu/go-booking/services/location/composer"
 	"github.com/ngleanhvu/go-booking/shared/core"
-	"github.com/ngleanhvu/go-booking/shared/proto/pb"
 	sctx "github.com/ngleanhvu/go-booking/shared/srvctx"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/ginc/middleware"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/gormc"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
 )
 
 func newServiceCtx() sctx.ServiceContext {
@@ -62,60 +58,6 @@ var rootCmd = &cobra.Command{
 			logger.Fatal(err)
 		}
 	},
-}
-
-func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
-	countryApiTransport := composer.NewComposerCountryApiTransport(serviceCtx)
-	provinceApiTransport := composer.NewComposerProvinceApiTransport(serviceCtx)
-	wardApiTransport := composer.NewComposerWardApiTransport(serviceCtx)
-
-	locations := router.Group("/locations")
-	{
-		// countries
-		locations.POST("/countries", countryApiTransport.CreateCountryHdl())
-		locations.GET("/countries/:id", countryApiTransport.GetCountryByIdHdl())
-		locations.PUT("/countries/:id", countryApiTransport.UpdateCountryHdl())
-		locations.GET("/countries", countryApiTransport.ListCountryHdl())
-		locations.GET("/countries/code/:code", countryApiTransport.GetCountryByIdHdl())
-		locations.DELETE("/countries/:id", countryApiTransport.DeleteCountryHdl())
-
-		// provinces
-		locations.GET("/provinces/:id", provinceApiTransport.GetProvinceByIdHdl())
-		locations.POST("/provinces", provinceApiTransport.CreateProvinceHdl())
-		locations.GET("/provinces/code/:code", provinceApiTransport.GetProvinceByCodeHdl())
-		locations.PUT("/provinces/:id", provinceApiTransport.UpdateProvinceHdl())
-		locations.DELETE("/provinces/:id", provinceApiTransport.DeleteProvinceHdl())
-		locations.GET("/provinces", provinceApiTransport.ListProvinceHdl())
-
-		// wards
-		locations.GET("/wards/:id", wardApiTransport.GetWardByIdHdl())
-		locations.POST("/wards", wardApiTransport.CreateWardHdl())
-		locations.GET("wards/code/:code", wardApiTransport.GetWardByCodeHdl())
-		locations.PUT("/wards/:id", wardApiTransport.UpdateWardHdl())
-		locations.DELETE("/wards/:id", wardApiTransport.DeleteWardHdl())
-		locations.GET("/wards", wardApiTransport.ListWardHdl())
-	}
-}
-
-func StartGRPCServices(serviceCtx sctx.ServiceContext) {
-	configComp := serviceCtx.MustGet(core.KeyCompGrpcConf).(core.GrpcConfig)
-	logger := serviceCtx.Logger("grpc")
-
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", configComp.GetGRPCPort()))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	logger.Infof("GRPC Server is listening on %d ...\n", configComp.GetGRPCPort())
-
-	s := grpc.NewServer()
-
-	pb.RegisterCountryServiceServer(s, composer.NewCountryGrpcTransport(serviceCtx))
-
-	if err := s.Serve(lis); err != nil {
-		log.Fatalln(err)
-	}
 }
 
 func Execute() {

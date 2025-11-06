@@ -1,25 +1,27 @@
-package provincetransport
+package api
 
 import (
-	"github.com/gin-gonic/gin"
-	provincemodel "github.com/ngleanhvu/go-booking/services/location/module/province/model"
-	"github.com/ngleanhvu/go-booking/shared/core"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
+	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
-func (p *provinceTransport) UpdateProvinceHdl() gin.HandlerFunc {
+func (w *wardTransport) UpdateWardHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var data provincemodel.UpdateProvinceDTO
+		var data wardsmodel.UpdateWardDTO
 
+		//id, err := strconv.Atoi(c.Param("id"))
 		id, err := core.FromBase58(c.Param("id"))
 		if err != nil {
-			core.WriteErrorResponse(c, core.ErrNotFound.
-				WithError(err.Error()).
-				WithDebug(err.Error()),
+			core.WriteErrorResponse(c, core.ErrBadRequest.
+				WithError(err.Error()),
 			)
 			return
 		}
 
+		// Validate
 		if err := c.ShouldBindJSON(&data); err != nil {
 			core.WriteErrorResponse(c, core.ErrBadRequest.
 				WithError(err.Error()).
@@ -27,13 +29,13 @@ func (p *provinceTransport) UpdateProvinceHdl() gin.HandlerFunc {
 			)
 			return
 		}
-		// Validate
 
-		if err := p.provinceBusiness.UpdateProvinceBiz(c, int(id.GetLocalID()), &data); err != nil {
+		if err := w.wardBusiness.UpdateWardBiz(c, int(id.GetLocalID()), &data); err != nil {
 			core.WriteErrorResponse(c, err)
 			return
 		}
 
 		c.JSON(http.StatusOK, core.ResponseData(true))
 	}
+
 }

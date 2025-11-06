@@ -8,10 +8,12 @@ import (
 	"github.com/ngleanhvu/go-booking/services/location/module/country/transport/rpc"
 	provincebusiness "github.com/ngleanhvu/go-booking/services/location/module/province/business"
 	provincerepo "github.com/ngleanhvu/go-booking/services/location/module/province/repo"
-	provincetransport "github.com/ngleanhvu/go-booking/services/location/module/province/transport"
+	provincetransport "github.com/ngleanhvu/go-booking/services/location/module/province/transport/api"
+	provincerpc "github.com/ngleanhvu/go-booking/services/location/module/province/transport/rpc"
 	wardsbusiness "github.com/ngleanhvu/go-booking/services/location/module/ward/business"
 	wardsrepo "github.com/ngleanhvu/go-booking/services/location/module/ward/repo"
-	wardstransport "github.com/ngleanhvu/go-booking/services/location/module/ward/transport"
+	wardstransport "github.com/ngleanhvu/go-booking/services/location/module/ward/transport/api"
+	wardrpc "github.com/ngleanhvu/go-booking/services/location/module/ward/transport/rpc"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	"github.com/ngleanhvu/go-booking/shared/proto/pb"
 	"github.com/ngleanhvu/go-booking/shared/srvctx"
@@ -74,4 +76,20 @@ func NewCountryGrpcTransport(sctx srvctx.ServiceContext) pb.CountryServiceServer
 	countryBiz := business.NewBusiness(countryRepo)
 	countryRpc := rpc.NewRpc(countryBiz)
 	return countryRpc
+}
+
+func NewProvinceGrpcTransport(sctx srvctx.ServiceContext) pb.ProvinceServiceServer {
+	provinceDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	provinceRepo := provincerepo.NewProvinceRepo(provinceDb.GetDB())
+	provinceBiz := provincebusiness.NewProvinceBusiness(provinceRepo)
+	provinceRpc := provincerpc.NewProvinceRpc(provinceBiz)
+	return provinceRpc
+}
+
+func NewWardGrpcTransport(sctx srvctx.ServiceContext) pb.WardServiceServer {
+	wardDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	wardRepo := wardsrepo.NewWardRepo(wardDb.GetDB())
+	wardBusiness := wardsbusiness.NewWardBusiness(wardRepo)
+	wardRpc := wardrpc.NewWardRpc(wardBusiness)
+	return wardRpc
 }
