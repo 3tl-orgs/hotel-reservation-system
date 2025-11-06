@@ -9,4 +9,5 @@ var (
 	ErrWarIdIsEmpty          = errors.New("war id is empty")
 	ErrProvinceIdIsEmpty     = errors.New("province id is empty")
 	ErrCountryIdIsEmpty      = errors.New("country id is empty")
+	ErrCannotCreateProperty  = errors.New("cannot create property")
 )
