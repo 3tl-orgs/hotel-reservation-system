@@ -18,4 +18,5 @@ const (
 	EntityDeleted              = false
 	MaskTypeFacilityProperties = 7
 	MaskTypeProperty           = 10
+	MaskTypeRoomType           = 11
 )

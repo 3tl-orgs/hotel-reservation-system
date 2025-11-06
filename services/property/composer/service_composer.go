@@ -14,6 +14,9 @@ import (
 	propertyTypeBiz "github.com/ngleanhvu/go-booking/services/property/module/propertytype/biz"
 	propertyTypeRepo1 "github.com/ngleanhvu/go-booking/services/property/module/propertytype/repo"
 	propertyTypeTransport "github.com/ngleanhvu/go-booking/services/property/module/propertytype/transport/api"
+	roomtypebiz "github.com/ngleanhvu/go-booking/services/property/module/roomtype/biz"
+	roomtyperepo "github.com/ngleanhvu/go-booking/services/property/module/roomtype/repo"
+	roomtypeapi "github.com/ngleanhvu/go-booking/services/property/module/roomtype/transport/api"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	"github.com/ngleanhvu/go-booking/shared/srvctx"
 	"github.com/ngleanhvu/go-booking/shared/srvctx/component/grpcclient"
@@ -86,4 +89,12 @@ func ComposerPropertyApiTransport(sctx srvctx.ServiceContext) PropertyApiTranspo
 	propertyBiz := propertybiz.NewPropertyBusiness(propertyRepo)
 	propertyTransport := propertyapi.NewPropertyTransport(propertyBiz)
 	return propertyTransport
+}
+
+func ComposerRoomTypeApiTransport(sctx srvctx.ServiceContext) RoomTypeApiTransport {
+	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	roomTypeRepo := roomtyperepo.NewRoomTypeRepo(db.GetDB())
+	roomTypeBiz := roomtypebiz.NewRoomTypeBusiness(roomTypeRepo)
+	roomTypeTransport := roomtypeapi.NewRoomTypeTransport(roomTypeBiz)
+	return roomTypeTransport
 }
