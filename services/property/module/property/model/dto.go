@@ -1,29 +1,34 @@
 package propertymodel
 
 import (
+	"mime/multipart"
 	"net/http"
-	"time"
+	"strings"
 
 	"github.com/ngleanhvu/go-booking/shared/core"
+	"github.com/pkg/errors"
 )
 
 type PropertyCreateDTO struct {
 	core.SQLModel
-	Name           string      `form:"name" gorm:"column:name"`
-	Star           float32     `form:"star_rating" gorm:"column:star_rating"`
-	Address        string      `form:"address" gorm:"column:address"`
-	CountryId      int         `form:"country_id" gorm:"column:country_id"`
-	ProvinceId     int         `form:"province_id" gorm:"column:province_id"`
-	WardId         int         `form:"ward_id" gorm:"column:ward_id"`
-	Thumbnail      http.File   `form:"thumbnail" gorm:"column:thumbnail"`
-	Lat            float64     `form:"lat" gorm:"column:lat"`
-	Lng            float64     `form:"lng" gorm:"column:lng"`
-	PropertyTypeId int         `form:"property_type_id" gorm:"column:property_type_id"`
-	Description    string      `form:"description" gorm:"column:description"`
-	Images         []http.File `form:"images" gorm:"column:images"`
-	CheckInTime    time.Time   `form:"check_in_time" gorm:"column:check_in_time"`
-	CheckoutTime   time.Time   `form:"checkout_time" gorm:"column:checkout_time"`
-	Hotline        string      `form:"hotline" gorm:"column:hotline"`
+	Name           string                `form:"name" gorm:"column:name"`
+	Address        string                `form:"address" gorm:"column:address"`
+	CountryId      string                `form:"country_id" gorm:"column:country_id"`
+	ProvinceId     string                `form:"province_id" gorm:"column:province_id"`
+	WardId         string                `form:"ward_id" gorm:"column:ward_id"`
+	Thumbnail      *multipart.FileHeader `form:"thumbnail" gorm:"column:thumbnail"`
+	Lat            *float64              `form:"lat" gorm:"column:lat"`
+	Lng            *float64              `form:"lng" gorm:"column:lng"`
+	PropertyTypeId string                `form:"property_type_id" gorm:"column:property_type_id"`
+	Description    *string               `form:"description" gorm:"column:description"`
+	Images         *[]http.File          `form:"images" gorm:"column:images"`
+	CheckInTime    *string               `form:"check_in_time" gorm:"column:check_in_time"`
+	CheckoutTime   *string               `form:"checkout_time" gorm:"column:checkout_time"`
+	Hotline        *string               `form:"hotline" gorm:"column:hotline"`
+	HostId         *int                  `form:"host_id" gorm:"column:host_id"`
+	WebsiteUrl     *string               `form:"website_url" gorm:"column:website_url"`
+	Email          *string               `form:"email" gorm:"column:email"`
+	BestAmenities  *core.JsonTypeArray   `form:"best_amenities" gorm:"column:best_amenities"`
 }
 
 func (PropertyCreateDTO) TableName() string {
@@ -34,20 +39,38 @@ func (p *PropertyCreateDTO) Mask() {
 	p.SQLModel.Mask(core.MaskTypeProperty)
 }
 
-type PropertyUpdateDTO struct {
-	core.SQLModel
-	Name           *string `form:"name" gorm:"column:name"`
-	Address        *string `form:"address" gorm:"column:address"`
-	ProvinceId     *int    `form:"province_id" gorm:"column:province_id"`
-	WardId         *int    `form:"ward_id" gorm:"column:ward_id"`
-	Thumbnail      string  `form:"thumbnail" gorm:"column:thumbnail"`
-	PropertyTypeId *int    `form:"property_type_id" gorm:"column:property_type_id"`
-}
+func (p *PropertyCreateDTO) Validate() error {
+	p.Name = strings.TrimSpace(p.Name)
+	p.Address = strings.TrimSpace(p.Address)
+	p.PropertyTypeId = strings.TrimSpace(p.PropertyTypeId)
+	p.CountryId = strings.TrimSpace(p.CountryId)
+	p.ProvinceId = strings.TrimSpace(p.ProvinceId)
+	p.WardId = strings.TrimSpace(p.WardId)
 
-func (PropertyUpdateDTO) TableName() string {
-	return "properties"
-}
+	if err := checkName(p.Name); err != nil {
+		return errors.WithStack(err)
+	}
 
-func (p *PropertyUpdateDTO) Mask() {
-	p.SQLModel.Mask(core.MaskTypeProperty)
+	if err := checkPropertyTypeId(p.PropertyTypeId); err != nil {
+		return errors.WithStack(err)
+	}
+
+	if err := checkAddress(p.Address); err != nil {
+		return errors.WithStack(err)
+	}
+
+	if err := checkCountryId(p.CountryId); err != nil {
+		return errors.WithStack(err)
+	}
+
+	if err := checkProvinceId(p.ProvinceId); err != nil {
+		return errors.WithStack(err)
+	}
+
+	if err := checkWardId(p.WardId); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+
 }

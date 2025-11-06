@@ -1,14 +1,12 @@
 package propertymodel
 
-import "github.com/pkg/errors"
+import "errors"
 
 var (
-	ErrIsEmpty                  = errors.New("Data is empty")
-	ErrCannotCreateProperty     = errors.New("cannot create Property")
-	ErrCannotGetProperty        = errors.New("cannot get Property")
-	ErrCannotUpdateProperty     = errors.New("cannot update Property")
-	ErrPropertyNotFound         = errors.New("cannot found Property")
-	ErrCannotDeleteProperty     = errors.New("cannot delete Property")
-	ErrRecordHasBeenDeleted     = errors.New("record has been deleted")
-	ErrIdOrAmenitiesNotAccepted = errors.New("Id or amenities not accepted")
+	ErrAddressIsEmpty        = errors.New("address is empty")
+	ErrPropertyTypeIdIsEmpty = errors.New("property type id is empty")
+	ErrNameIsEmpty           = errors.New("property name is empty")
+	ErrWarIdIsEmpty          = errors.New("war id is empty")
+	ErrProvinceIdIsEmpty     = errors.New("province id is empty")
+	ErrCountryIdIsEmpty      = errors.New("country id is empty")
 )
