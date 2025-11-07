@@ -8,9 +8,10 @@ import (
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	amenityApiTransport := composer.ComposerAmenityApiTransport(serviceCtx)
+	facilityApiTransport := composer.ComposerFacilityApiTransport(serviceCtx)
 	propertyTypeApiTransport := composer.ComposerPropertTypeApiTransport(serviceCtx)
 	facilityPropertiesApiTransport := composer.ComposerFacilityPropertiesApiTransport(serviceCtx)
-	propertyApiTransport := composer.ComposerPropertyApiTransport(serviceCtx)
+	roomTypeApiTransport := composer.ComposerRoomTypeApiTransport(serviceCtx)
 
 	properties := router.Group("/properties")
 	{
@@ -21,6 +22,12 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		properties.PATCH("/amenities/:id", amenityApiTransport.UpdateAmenityHdl())
 		properties.DELETE("/amenities/:id", amenityApiTransport.DeleteAmenityByIdHdl())
 		properties.GET("/amenities/test-grpc/:id", amenityApiTransport.TestGrpcHdl())
+
+		properties.POST("/facilities", facilityApiTransport.CreateFacilityHdl())
+		properties.GET("/facilities", facilityApiTransport.GetListFacilitiesHdl())
+		properties.GET("/facilities/:id", facilityApiTransport.GetFacilityByIdHdl())
+		properties.PATCH("/facilities/:id", facilityApiTransport.UpdateFacilityHdl())
+		properties.DELETE("/facilities/:id", facilityApiTransport.DeleteFacilityHdl())
 
 		// property type
 		properties.GET("/property-types/:id", propertyTypeApiTransport.GetPropertyTypeByIdHdl())
@@ -35,12 +42,13 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		properties.GET("/facility-properties", facilityPropertiesApiTransport.ListFacilityPropHdl())
 		properties.GET("/facility-properties/facilities/:id", facilityPropertiesApiTransport.GetFacilityByPropHdl())
 
-		// Property API
-		properties.POST("/property", propertyApiTransport.CreatePropertyHdl())
-		properties.GET("/property/:id", propertyApiTransport.GetPropertyByIdHdl())
-		properties.PATCH("/property/:id", propertyApiTransport.UpdatePropertyHdl())
-		properties.DELETE("/property/:id", propertyApiTransport.DeletePropertyHdl())
-		properties.GET("/property", propertyApiTransport.ListPropertyHdl())
+		// Room Type API
+		properties.POST("/roomtypes", roomTypeApiTransport.CreateRoomTypeHdl())
+		properties.GET("/roomtypes/:id", roomTypeApiTransport.GetRoomTypeByIdHdl())
+		properties.PATCH("/roomtypes/:id", roomTypeApiTransport.UpdateRoomTypeHdl())
+		properties.DELETE("/roomtypes/:id", roomTypeApiTransport.DeleteRoomTypeHdl())
+		properties.GET("/roomtypes", roomTypeApiTransport.ListRoomTypeHdl())
+		properties.GET("/roomtypes/property/:id", roomTypeApiTransport.GetRoomTypeByPropHdl())
 	}
 
 }

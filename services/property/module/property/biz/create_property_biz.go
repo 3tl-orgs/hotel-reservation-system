@@ -33,7 +33,7 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 		CountryId:      countryId,
 		ProvinceId:     provinceId,
 		WardId:         wardId,
-		Thumbnail:      nil,
+		Thumbnail:      req.Thumbnail,
 		Address:        req.Address,
 		Lat:            req.Lat,
 		Lng:            req.Lng,
@@ -41,7 +41,7 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 		Star:           nil,
 	}
 
-	images := core.JSONType[string]{}
+	images := core.JSONType[core.Image]{}
 	if req.Images != nil {
 		images = *req.Images
 	}

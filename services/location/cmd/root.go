@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -21,11 +20,13 @@ func newServiceCtx() sctx.ServiceContext {
 	if err != nil {
 		migrationPath = "./services/location/migrations"
 	}
-	log.Println("migrationPath:", migrationPath)
+
+	migrationURL := core.ToFileURL(migrationPath)
+
 	return sctx.NewServiceContext(
 		sctx.WithName("Location service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
-		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
+		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationURL)), // pass URL, not path
 		sctx.WithComponent(NewGrpcConfig()),
 	)
 }

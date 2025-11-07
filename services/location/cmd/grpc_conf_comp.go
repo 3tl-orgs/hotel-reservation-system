@@ -27,6 +27,10 @@ func (c *config) InitFlags() {
 		3101,
 		"gRPC Port. Default: 3101",
 	)
+	flag.StringVar(&c.grpcServerAddress,
+		"grpc-server-address",
+		"localhost:3101",
+		"gRPC server address")
 }
 
 func (c *config) Activate(_ sctx.ServiceContext) error {
