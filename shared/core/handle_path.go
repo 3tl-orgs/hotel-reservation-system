@@ -1,25 +1,21 @@
 package core
 
 import (
+	"fmt"
 	"path/filepath"
 	"runtime"
 	"strings"
 )
 
 func ToFileURL(path string) string {
+	path = filepath.ToSlash(path)
 	if runtime.GOOS == "windows" {
-		// Clean and use forward slashes
-		path = strings.ReplaceAll(filepath.ToSlash(path), " ", "\\ ")
-		// Remove drive letter and ensure triple slash
+		// Windows: D:/... → file://D:/...
 		if strings.HasPrefix(path, "/") {
-			return "file://" + path
+			path = strings.TrimPrefix(path, "/")
 		}
-		// Handle C:/... → /C:/...
-		drive := strings.ToUpper(string(path[0]))
-		rest := path[2:]
-		return "file:///" + drive + ":" + rest
+		return fmt.Sprintf("file://%s", path)
 	}
-
-	// Unix-like: just ensure forward slashes
-	return "file://" + filepath.ToSlash(path)
+	// Unix-like: /home/... → file:///home/...
+	return fmt.Sprintf("file:///%s", path)
 }

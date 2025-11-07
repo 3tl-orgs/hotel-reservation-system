@@ -22,10 +22,12 @@ func newServiceCtx() sctx.ServiceContext {
 		migrationPath = "./services/property/migrations"
 	}
 
+	migrationUrl := core.ToFileURL(migrationPath)
+
 	return sctx.NewServiceContext(
 		sctx.WithName("Property service"),
 		sctx.WithComponent(ginc.NewGin(core.KeyCompGIN)),
-		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationPath)),
+		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationUrl)),
 		sctx.WithComponent(NewGrpcConfig()),
 		sctx.WithComponent(grpcclient.NewCountryRPCClientComponent(core.KeyCountryCompLocationClient, "")),
 	)
