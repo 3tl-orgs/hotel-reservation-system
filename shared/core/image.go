@@ -17,8 +17,8 @@ type Image struct {
 
 func (*Image) TableName() string { return "images" }
 
-func (img *Image) Fulfill(domain string) {
-	img.FileName = fmt.Sprintf("%s/%s", domain, img.FileName)
+func (img *Image) Fulfill(domain, dst string) {
+	img.FileName = fmt.Sprintf("%s/%s", domain, dst)
 }
 
 func (img *Image) Scan(value interface{}) error { //Từ db -> scan -> trả ra value

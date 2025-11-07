@@ -1,11 +1,9 @@
 package uploadprovider
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -26,15 +24,15 @@ func NewR2Provider(bucketName, accountId, accessKey, secretKey, domain string) *
 	endpoint := fmt.Sprintf("https://%s.r2.cloudflarestorage.com", accountId)
 
 	provider := &r2Provider{
-		bucketName:   bucketName,
-		accountId:    accountId,
-		accessKey:    accessKey,
-		secretKey:    secretKey,
-		domain: domain,
+		bucketName: bucketName,
+		accountId:  accountId,
+		accessKey:  accessKey,
+		secretKey:  secretKey,
+		domain:     domain,
 	}
 
 	sess, err := session.NewSession(&aws.Config{
-		Region:           aws.String("auto"), // R2 không cần region thật
+		Region:           aws.String("auto"),
 		Endpoint:         aws.String(endpoint),
 		S3ForcePathStyle: aws.Bool(true),
 		Credentials:      credentials.NewStaticCredentials(accessKey, secretKey, ""),
@@ -45,40 +43,36 @@ func NewR2Provider(bucketName, accountId, accessKey, secretKey, domain string) *
 	}
 
 	provider.session = sess
-	return provider 
+	return provider
 }
 
 // SaveFileUploaded receives data and stores it into aws s3
-func (provider *r2Provider) SaveFileUploaded(ctx context.Context, file io.Reader, dst string) (*core.Image, error) {
-	buf := make([]byte, 512)
-    n, _ := file.Read(buf)
+func (provider *r2Provider) SaveFileUploaded(ctx context.Context, file io.Reader, dst, contentType string) (*core.Image, error) {
 
-	file = io.MultiReader(bytes.NewReader(buf[:n]), file)
+	// fileBytes, err := io.ReadAll(file)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to read file: %w", err)
+	// }
+	
+	// fileReader := bytes.NewReader(fileBytes)
 
 	uploader := s3manager.NewUploader(provider.session)
 
 	_, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(provider.bucketName),
-		Key:    aws.String(dst),
-		ACL:    aws.String("public-read"),
-		Body:   file, 
+		Bucket:      aws.String(provider.bucketName),
+		Key:         aws.String(dst),
+		ACL:         aws.String("public-read"),
+		Body:        file,
+		ContentType: aws.String(contentType),
 	})
-	
-	//req, _ := s3.New(provider.session).PutObjectRequest(&s3.PutObjectInput{
-	//	Bucket: aws.String(provider.bucketName),
-	//	Key:    aws.String(dst),
-	//	ACL:    aws.String("private"),
-	//})
-	//
-	//req.Presign(time.Second * 5)
 
 	if err != nil {
 		return nil, err
 	}
 
 	img := &core.Image{}
+	img.Fulfill(provider.domain, dst)
+	fmt.Printf("Successfully uploaded %q to %q\n", dst, "R2")
 
-	fmt.Printf("Successfully uploaded %q to %q\n", dst, provider.bucketName)
-   
 	return img, nil
 }

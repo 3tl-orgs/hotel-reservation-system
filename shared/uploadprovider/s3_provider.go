@@ -47,7 +47,7 @@ func NewS3Provider(bucketName string, region string, apiKey string, secret strin
 }
 
 // SaveFileUploaded receives data and stores it into aws s3
-func (provider *s3Provider) SaveFileUploaded(ctx context.Context, file io.Reader, dst string) (*core.Image, error) {
+func (provider *s3Provider) SaveFileUploaded(ctx context.Context, file io.Reader, dst, contentType string) (*core.Image, error) {
 	buf := make([]byte, 512)
     n, _ := file.Read(buf)
 

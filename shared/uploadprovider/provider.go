@@ -8,5 +8,5 @@ import (
 )
 
 type UploadProvider interface {
-	SaveFileUploaded(ctx context.Context, file io.Reader, dst string) (*core.Image, error)
+	SaveFileUploaded(ctx context.Context, file io.Reader, dst, contentType string) (*core.Image, error)
 }
