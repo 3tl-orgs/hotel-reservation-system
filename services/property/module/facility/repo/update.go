@@ -1,0 +1,33 @@
+package facilityrepo
+
+import (
+	"context"
+
+	"github.com/ngleanhvu/go-booking/services/property/module/facility/model"
+	"github.com/pkg/errors"
+)
+
+func (s *facilityRepo) Update(ctx context.Context, id int, data *model.FacilityUpdateDto) error {
+	updateData := map[string]interface{}{}
+
+	if data.Name != nil {
+		updateData["name"] = *data.Name
+	}
+
+	// if data.Icon != nil {
+	// 	updateData["icon"] = *data.Icon
+	// }
+	
+	if data.UpdatedAt != nil {
+		updateData["updated_at"] = *data.UpdatedAt
+	}
+
+	if err := s.db.WithContext(ctx).
+		Table(model.Facility{}.TableName()).
+		Where("id = ? AND status = ?", id, true).
+		Updates(updateData).Error; err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
