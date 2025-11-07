@@ -8,6 +8,8 @@ const (
 	KeyCompGrpcConf              = "grpc-conf"
 	KeyCountryCompLocationClient = "country-comp-location-client"
 
+
+	MaskTypeFacility = 10
 	MaskTypeWard               = 6
 	MaskTypeProvince           = 4
 	MaskTypeCountry            = 3
@@ -19,4 +21,5 @@ const (
 	MaskTypeFacilityProperties = 7
 	MaskTypeProperty           = 10
 	MaskTypeRoomType           = 11
+
 )
