@@ -10,7 +10,7 @@ import (
 
 type FacilityBusiness interface {
 	//Biz
-	CreateFacilityBiz(ctx context.Context, data *model.FacilityCreateDto, file io.Reader, folder string) error
+	CreateFacilityBiz(ctx context.Context, data *model.FacilityCreateDto, file io.Reader, folder, contentType string) error
 	GetFacilityByIdBiz(ctx context.Context, id int) (*model.Facility, error)
 	GetListFacilitiesBiz(ctx context.Context, paging *core.Paging, moreKeys ...string,) ([]model.Facility, error)
 	UpdateFacilityBiz(ctx context.Context, id int, data *model.FacilityUpdateDto) error

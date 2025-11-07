@@ -15,7 +15,8 @@ import (
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
-func (b *facilityBusiness) CreateFacilityBiz(ctx context.Context, data *model.FacilityCreateDto, file io.Reader, folder string) error {
+func (b *facilityBusiness) CreateFacilityBiz(ctx context.Context, data *model.FacilityCreateDto, file io.Reader, folder, contentType string) error {
+
 	config, format, err := image.DecodeConfig(file)
 	
 	if err != nil {
@@ -27,7 +28,7 @@ func (b *facilityBusiness) CreateFacilityBiz(ctx context.Context, data *model.Fa
 	filename := fmt.Sprintf("%d.%s", time.Now().Nanosecond(), format)
 	dst := filepath.Join(folder, filename)
 	
-	img, err := b.uploader.SaveFileUploaded(ctx, file, dst); 
+	img, err := b.uploader.SaveFileUploaded(ctx, file, dst, contentType); 
 	
 	if err != nil {
 		return core.ErrInternalServerError.
