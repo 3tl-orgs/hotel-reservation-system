@@ -3,15 +3,16 @@ package uploadprovider
 import (
 	"bytes"
 	"context"
+	"fmt"
+	"io"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/ngleanhvu/go-booking/shared/core"
 
 	"log"
-	"net/http"
 )
 
 type s3Provider struct {
@@ -46,19 +47,21 @@ func NewS3Provider(bucketName string, region string, apiKey string, secret strin
 }
 
 // SaveFileUploaded receives data and stores it into aws s3
-func (provider *s3Provider) SaveFileUploaded(ctx context.Context, data []byte, dst string) (*core.Image, error) {
-	// fileBytes is an io reader to read data
-	fileBytes := bytes.NewReader(data)
+func (provider *s3Provider) SaveFileUploaded(ctx context.Context, file io.Reader, dst, contentType string) (*core.Image, error) {
+	buf := make([]byte, 512)
+    n, _ := file.Read(buf)
 
-	fileType := http.DetectContentType(data)
+	file = io.MultiReader(bytes.NewReader(buf[:n]), file)
 
-	_, err := s3.New(provider.session).PutObject(&s3.PutObjectInput{
-		Bucket:      aws.String(provider.bucketName),
-		Key:         aws.String(dst),
-		ACL:         aws.String("private"),
-		ContentType: aws.String(fileType),
-		Body:        fileBytes,
+	uploader := s3manager.NewUploader(provider.session)
+
+	_, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(provider.bucketName),
+		Key:    aws.String(dst),
+		ACL:    aws.String("private"),
+		Body:   file, 
 	})
+
 
 	//req, _ := s3.New(provider.session).PutObjectRequest(&s3.PutObjectInput{
 	//	Bucket: aws.String(provider.bucketName),
@@ -74,5 +77,7 @@ func (provider *s3Provider) SaveFileUploaded(ctx context.Context, data []byte, d
 
 	img := &core.Image{}
 
+	fmt.Printf("Successfully uploaded %q to %q\n", dst, provider.bucketName)
+   
 	return img, nil
 }

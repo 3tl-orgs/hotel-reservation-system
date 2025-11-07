@@ -18,9 +18,9 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
-	migrationPath, err := filepath.Abs("./services/property/migrations")
+	migrationPath, err := filepath.Abs("/app/services/property/migrations")
 	if err != nil {
-		migrationPath = "./services/property/migrations"
+		migrationPath = "/app/services/property/migrations"
 	}
 
 	return sctx.NewServiceContext(
@@ -60,6 +60,7 @@ var rootCmd = &cobra.Command{
 
 func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	amenityApiTransport := composer.ComposerAmenityApiTransport(serviceCtx)
+	facilityApiTransport := composer.ComposerFacilityApiTransport(serviceCtx)
 	propertyTypeApiTransport := composer.ComposerPropertTypeApiTransport(serviceCtx)
 	facilityPropertiesApiTransport := composer.ComposerFacilityPropertiesApiTransport(serviceCtx)
 	roomTypeApiTransport := composer.ComposerRoomTypeApiTransport(serviceCtx)
@@ -73,6 +74,12 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		properties.PATCH("/amenities/:id", amenityApiTransport.UpdateAmenityHdl())
 		properties.DELETE("/amenities/:id", amenityApiTransport.DeleteAmenityByIdHdl())
 		properties.GET("/amenities/test-grpc/:id", amenityApiTransport.TestGrpcHdl())
+	
+		properties.POST("/facilities", facilityApiTransport.CreateFacilityHdl())
+		properties.GET("/facilities", facilityApiTransport.GetListFacilitiesHdl())
+		properties.GET("/facilities/:id", facilityApiTransport.GetFacilityByIdHdl())
+		properties.PATCH("/facilities/:id", facilityApiTransport.UpdateFacilityHdl())
+		properties.DELETE("/facilities/:id", facilityApiTransport.DeleteFacilityHdl())
 
 		// property type
 		properties.GET("/property-types/:id", propertyTypeApiTransport.GetPropertyTypeByIdHdl())
