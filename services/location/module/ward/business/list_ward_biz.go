@@ -11,7 +11,7 @@ func (w *wardBusiness) ListWardBiz(ctx context.Context,
 	paging *core.Paging,
 	moreKeys ...string,
 ) ([]wardsmodel.Ward, error) {
-	result, err := w.wardRepo.ListData(ctx, filter, paging, moreKeys...)
+	result, err := w.wardRepo.ListData(ctx, filter, paging, "Province")
 	if err != nil {
 		return nil, core.ErrInternalServerError.
 			WithError(wardsmodel.ErrCannotGetWard.Error()).
@@ -20,6 +20,6 @@ func (w *wardBusiness) ListWardBiz(ctx context.Context,
 	for i := range result {
 		result[i].Mask()
 	}
-	
+
 	return result, nil
 }
