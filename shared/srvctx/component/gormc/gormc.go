@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/golang-migrate/migrate/v4/database/postgres" // 👈 Và dòng này
-	_ "github.com/golang-migrate/migrate/v4/source/file"       // 👈 Thêm dòng này
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )

@@ -10,19 +10,17 @@ func (api *api) GetCountryByIdHdl() gin.HandlerFunc {
 		uid, err := core.FromBase58(c.Param("id"))
 
 		if err != nil {
-			core.WriteErrorResponse(c, core.ErrBadRequest.
-				WithError(err.Error()).
-				WithDebug(err.Error()))
+			c.JSON(400, core.Error(400, err.Error(), nil))
 			return
 		}
 
 		data, err := api.business.GetCountryByIdBiz(c, int(uid.GetLocalID()))
 
 		if err != nil {
-			core.WriteErrorResponse(c, err)
+			c.JSON(500, core.Error(500, err.Error(), nil))
 			return
 		}
 
-		c.JSON(200, core.SuccessResponse(data, nil, nil))
+		c.JSON(200, core.Success("", data))
 	}
 }

@@ -12,17 +12,15 @@ func (api *api) DeleteCountryHdl() gin.HandlerFunc {
 		uid, err := core.FromBase58(c.Param("id"))
 
 		if err != nil {
-			core.WriteErrorResponse(c, core.ErrBadRequest.
-				WithError(err.Error()).
-				WithDebug(err.Error()))
+			c.JSON(400, core.Error(400, err.Error(), nil))
 			return
 		}
 
 		if err := api.business.DeleteCountryBiz(c, int(uid.GetLocalID())); err != nil {
-			core.WriteErrorResponse(c, err)
+			c.JSON(500, core.Error(500, err.Error(), nil))
 			return
 		}
 
-		c.JSON(http.StatusOK, core.ResponseData(true))
+		c.JSON(http.StatusOK, core.Success("", true))
 	}
 }

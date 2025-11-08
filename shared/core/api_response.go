@@ -10,8 +10,7 @@ type ApiResponse struct {
 	Success   bool        `json:"success"`             // true nếu thành công, false nếu thất bại
 	Code      int         `json:"code"`                // HTTP status code
 	Message   string      `json:"message,omitempty"`   // Mô tả ngắn gọn
-	Data      interface{} `json:"data,omitempty"`      // Dữ liệu trả về (nếu có)
-	Error     interface{} `json:"error,omitempty"`     // Chi tiết lỗi (nếu có)
+	Data      interface{} `json:"data,omitempty"`      // Dữ liệu trả về (nếu có)  // Chi tiết lỗi (nếu có)
 	Timestamp string      `json:"timestamp,omitempty"` // Thời gian phản hồi
 }
 
@@ -32,7 +31,7 @@ func Error(code int, message string, err interface{}) ApiResponse {
 		Success:   false,
 		Code:      code,
 		Message:   message,
-		Error:     err,
+		Data:      err,
 		Timestamp: time.Now().Format(time.RFC3339),
 	}
 }

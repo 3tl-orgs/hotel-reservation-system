@@ -9,26 +9,26 @@ import (
 )
 
 type PropertyCreateDTO struct {
-	Name           string                       `form:"name" gorm:"column:name"`
-	Address        string                       `form:"address" gorm:"column:address"`
-	CountryId      string                       `form:"country_id" gorm:"column:country_id"`
-	ProvinceId     string                       `form:"province_id" gorm:"column:province_id"`
-	WardId         string                       `form:"ward_id" gorm:"column:ward_id"`
-	ThumbnailFile  *multipart.FileHeader        `form:"thumbnail" gorm:"column:thumbnail"`
-	Thumbnail      *core.JSONObject[core.Image] `gorm:"column:thumbnail"`
-	Lat            *float64                     `form:"lat" gorm:"column:lat"`
-	Lng            *float64                     `form:"lng" gorm:"column:lng"`
-	PropertyTypeId string                       `form:"property_type_id" gorm:"column:property_type_id"`
-	Description    *string                      `form:"description" gorm:"column:description"`
-	ImageFiles     *[]multipart.FileHeader      `form:"image_files" gorm:"column:image_files"`
-	Images         *core.JSONType[core.Image]   `gorm:"column:images"`
-	CheckInTime    *string                      `form:"check_in_time" gorm:"column:check_in_time"`
-	CheckoutTime   *string                      `form:"checkout_time" gorm:"column:checkout_time"`
-	Hotline        *string                      `form:"hotline" gorm:"column:hotline"`
-	HostId         *int                         `form:"host_id" gorm:"column:host_id"`
-	WebsiteUrl     *string                      `form:"website_url" gorm:"column:website_url"`
-	Email          *string                      `form:"email" gorm:"column:email"`
-	BestAmenities  *string                      `form:"best_amenities" gorm:"column:best_amenities"`
+	Name           string                  `form:"name" binding:"required"`
+	Address        string                  `form:"address" binding:"required"`
+	CountryId      string                  `form:"country_id" binding:"required"`
+	ProvinceId     string                  `form:"province_id" binding:"required"`
+	WardId         string                  `form:"ward_id" binding:"required"`
+	ThumbnailFile  *multipart.FileHeader   `form:"thumbnail"`
+	Thumbnail      *core.Image             `gorm:"column:thumbnail"`
+	Lat            *float64                `form:"lat"`
+	Lng            *float64                `form:"lng"`
+	PropertyTypeId string                  `form:"property_type_id"`
+	Description    *string                 `form:"description"`
+	ImageFiles     []*multipart.FileHeader `form:"image_files"` // ✅ đổi sang slice thường
+	Images         *core.Images            `gorm:"column:images"`
+	CheckInTime    *string                 `form:"check_in_time"`
+	CheckoutTime   *string                 `form:"check_out_time"`
+	Hotline        *string                 `form:"hotline"`
+	HostId         *int                    `form:"host_id"`
+	WebsiteUrl     *string                 `form:"website_url"`
+	Email          *string                 `form:"email"`
+	BestAmenities  *string                 `form:"best_amenities"`
 }
 
 func (PropertyCreateDTO) TableName() string {

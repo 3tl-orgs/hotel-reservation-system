@@ -11,16 +11,13 @@ func (api *propertyTypeApi) CreatePropertyTypeHdl() gin.HandlerFunc {
 		var data model.PropertyTypeCreateDto
 
 		if err := c.ShouldBindJSON(&data); err != nil {
-			c.JSON(400, core.Error(400, "",
-				core.ErrBadRequest.
-					WithError(err.Error()).
-					WithDebug(err.Error())))
+			c.JSON(400, core.Error(400, err.Error(), nil))
 		}
 
 		if err := api.propertyService.CreatePropertyTypeBiz(c, &data); err != nil {
-			c.JSON(500, core.Error(500, "", err))
+			c.JSON(500, core.Error(500, err.Error(), nil))
 		}
 
-		c.JSON(200, core.Success("", nil))
+		c.JSON(200, core.Success("", true))
 	}
 }

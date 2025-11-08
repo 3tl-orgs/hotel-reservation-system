@@ -2,9 +2,10 @@ package asyncjob
 
 import (
 	"context"
-	"go-booking/shared/core"
 	"log"
 	"sync"
+
+	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
 type group struct {
@@ -29,7 +30,7 @@ func (g *group) Run(ctx context.Context) error {
 	for i, _ := range g.jobs {
 		if g.isConcurrent {
 			go func(j Job) {
-				defer core.AppRecover()
+				defer core.Recover()
 				errChan <- g.runJob(ctx, j)
 				g.wg.Done()
 			}(g.jobs[i])

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	propertymodel "github.com/ngleanhvu/go-booking/services/property/module/property/model"
-	"github.com/ngleanhvu/go-booking/shared/uploadprovider"
 )
 
 type Business interface {
@@ -13,9 +12,8 @@ type Business interface {
 
 type propertyApi struct {
 	business Business
-	upload   uploadprovider.UploadProvider
 }
 
-func NewPropertyApi(business Business, upload uploadprovider.UploadProvider) *propertyApi {
-	return &propertyApi{business: business, upload: upload}
+func NewPropertyApi(business Business) *propertyApi {
+	return &propertyApi{business: business}
 }

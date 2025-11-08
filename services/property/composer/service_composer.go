@@ -13,6 +13,10 @@ import (
 	facilitypropertiesbiz "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/biz"
 	facilitypropertiesrepo "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/repo"
 	facilitypropertiesapi "github.com/ngleanhvu/go-booking/services/property/module/facility_properties/transport/api"
+	propertybiz "github.com/ngleanhvu/go-booking/services/property/module/property/biz"
+	propertystore "github.com/ngleanhvu/go-booking/services/property/module/property/repo"
+	propertyapi "github.com/ngleanhvu/go-booking/services/property/module/property/transport/api"
+	propertydetailstore "github.com/ngleanhvu/go-booking/services/property/module/propertydetail/repo"
 	propertyTypeBiz "github.com/ngleanhvu/go-booking/services/property/module/propertytype/biz"
 	propertyTypeRepo1 "github.com/ngleanhvu/go-booking/services/property/module/propertytype/repo"
 	propertyTypeTransport "github.com/ngleanhvu/go-booking/services/property/module/propertytype/transport/api"
@@ -67,6 +71,10 @@ type FacilityPropertiesApiTransport interface {
 	GetFacilityByPropHdl() gin.HandlerFunc
 }
 
+type PropertyApiTransport interface {
+	CreatePropertyHdl() gin.HandlerFunc
+}
+
 func ComposerAmenityApiTransport(sctx srvctx.ServiceContext) AmenityApiTransport {
 	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
 	amenityRepo := postgres.NewPostgresRepo(db.GetDB())
@@ -117,4 +125,19 @@ func ComposerRoomTypeApiTransport(sctx srvctx.ServiceContext) RoomTypeApiTranspo
 	roomTypeBiz := roomtypebiz.NewRoomTypeBusiness(roomTypeRepo)
 	roomTypeTransport := roomtypeapi.NewRoomTypeTransport(roomTypeBiz)
 	return roomTypeTransport
+}
+
+func ComposerPropertyTransport(sctx srvctx.ServiceContext) PropertyApiTransport {
+	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	propertyRepo := propertystore.NewPropertyStore(db.GetDB())
+	propertyDetailRepo := propertydetailstore.NewPropertyDetailStore(db.GetDB())
+	bucketName := os.Getenv("R2_BUCKET_NAME")
+	accessKey := os.Getenv("R2_ACCESS_KEY_ID")
+	secretKey := os.Getenv("R2_SECRET_ACCESS_KEY")
+	accountId := os.Getenv("R2_ACCOUNT_ID")
+	domain := os.Getenv("R2_PUBLIC_DOMAIN")
+	s3Uploader := uploadprovider.NewR2Provider(bucketName, accountId, accessKey, secretKey, domain)
+	propertyBiz := propertybiz.NewPropertyBiz(propertyRepo, propertyDetailRepo, s3Uploader)
+	propertyApi := propertyapi.NewPropertyApi(propertyBiz)
+	return propertyApi
 }

@@ -12,21 +12,21 @@ func (api *propertyTypeApi) ListPropertyTypeHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var filter model.Filter
 		if err := c.ShouldBindJSON(&filter); err != nil {
-			c.JSON(http.StatusBadRequest, core.Error(400, "", core.ErrBadRequest.
-				WithError(err.Error())))
+			c.JSON(http.StatusBadRequest, core.Error(400, err.Error(), nil))
+			return
 		}
 
 		var paging core.Paging
 		if err := c.ShouldBindQuery(&paging); err != nil {
-			c.JSON(http.StatusBadRequest, core.Error(400, "", core.ErrBadRequest.
-				WithError(err.Error())))
+			c.JSON(http.StatusBadRequest, core.Error(400, err.Error(), nil))
+			return
 		}
 
 		paging.Fulfill()
 
 		data, err := api.propertyService.ListPropertyTypeBiz(c, &filter, paging)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, core.Error(500, "", err))
+			c.JSON(http.StatusInternalServerError, core.Error(500, err.Error(), nil))
 		}
 
 		for i := range data {

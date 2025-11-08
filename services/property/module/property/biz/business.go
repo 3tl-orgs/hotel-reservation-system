@@ -5,6 +5,7 @@ import (
 
 	propertymodel "github.com/ngleanhvu/go-booking/services/property/module/property/model"
 	propertydetailmodel "github.com/ngleanhvu/go-booking/services/property/module/propertydetail/model"
+	"github.com/ngleanhvu/go-booking/shared/uploadprovider"
 )
 
 type PropertyStore interface {
@@ -18,8 +19,12 @@ type PropertyDetailStore interface {
 type business struct {
 	propertyStore       PropertyStore
 	propertyDetailStore PropertyDetailStore
+	uploadProvider      uploadprovider.UploadProvider
 }
 
-func NewPropertyBiz(propertyStore PropertyStore) *business {
-	return &business{propertyStore: propertyStore}
+func NewPropertyBiz(propertyStore PropertyStore, propertyDetailStore PropertyDetailStore,
+	uploadProvider uploadprovider.UploadProvider) *business {
+	return &business{propertyStore: propertyStore,
+		propertyDetailStore: propertyDetailStore,
+		uploadProvider:      uploadProvider}
 }

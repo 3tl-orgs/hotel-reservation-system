@@ -1,16 +1,22 @@
 package propertybiz
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"image"
+	"mime/multipart"
+	"path/filepath"
+	"time"
 
 	propertymodel "github.com/ngleanhvu/go-booking/services/property/module/property/model"
 	propertydetailmodel "github.com/ngleanhvu/go-booking/services/property/module/propertydetail/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
+	"github.com/ngleanhvu/go-booking/shared/uploadprovider"
 )
 
 func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.PropertyCreateDTO) error {
-	// Chuyển UID thành ID int
 	propertyTypeId, err := transferData(req.PropertyTypeId)
 	if err != nil {
 		return err
@@ -28,6 +34,14 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 		return err
 	}
 
+	// thumbnail, err := HandleImage(ctx, core.FolderPropertyImage, req.ThumbnailFile, b.uploadProvider)
+
+	// if err != nil {
+	// 	return core.ErrInternalServerError.WithError(err.Error())
+	// }
+
+	// req.Thumbnail = &core.JSONObject[core.Image]{thumbnail}
+
 	property := &propertymodel.Property{
 		PropertyTypeId: propertyTypeId,
 		CountryId:      countryId,
@@ -41,18 +55,31 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 		Star:           nil,
 	}
 
-	images := core.JSONType[core.Image]{}
-	if req.Images != nil {
-		images = *req.Images
-	}
+	// images := core.JSONType[core.Image]{}
+	// if req.Images != nil {
+	// 	for _, item := range req.ImageFiles {
+	// 		image, err := HandleImage(ctx, core.FolderPropertyImage, item, b.uploadProvider)
+	// 		if err != nil {
+	// 			return core.ErrInternalServerError.WithError(err.Error())
+	// 		}
+	// 		images = append(images, *image)
+	// 	}
+	// }
 
-	bestAmenities := core.JSONType[int]{}
+	var bestAmenities []string
 	if req.BestAmenities != nil && *req.BestAmenities != "" {
-		arr, err := core.FromJSON[[]int](*req.BestAmenities)
-		if err != nil {
+		if err := json.Unmarshal([]byte(*req.BestAmenities), &bestAmenities); err != nil {
 			return fmt.Errorf("invalid bestAmenities json: %w", err)
 		}
-		bestAmenities = arr
+	}
+
+	bestAmenitiesFormat := make([]int, 0, len(bestAmenities))
+	for _, item := range bestAmenities {
+		uid, err := core.FromBase58(item)
+		if err != nil {
+			return core.ErrInternalServerError.WithError(err.Error())
+		}
+		bestAmenitiesFormat = append(bestAmenitiesFormat, int(uid.GetLocalID()))
 	}
 
 	propertyDetail := &propertydetailmodel.PropertyDetail{
@@ -64,8 +91,8 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 		Hotline:       req.Hotline,
 		HostId:        req.HostId,
 		WebsiteUrl:    req.WebsiteUrl,
-		Images:        &images,
-		BestAmenities: &bestAmenities,
+		Images:        nil,
+		BestAmenities: &bestAmenitiesFormat,
 	}
 
 	if err := b.propertyStore.Create(ctx, property); err != nil {
@@ -85,4 +112,43 @@ func transferData(uid string) (int, error) {
 		return 0, core.ErrInternalServerError.WithError(err.Error()).WithDebug(err.Error())
 	}
 	return int(id.GetLocalID()), nil
+}
+
+func HandleImage(ctx context.Context,
+	folder string,
+	fileHeader *multipart.FileHeader,
+	up uploadprovider.UploadProvider) (*core.Image, error) {
+	file, err := fileHeader.Open()
+	if err != nil {
+		return nil, core.ErrUploadFile
+	}
+	defer file.Close()
+
+	buf := new(bytes.Buffer)
+	if _, err := buf.ReadFrom(file); err != nil {
+		return nil, core.ErrUploadFile
+	}
+
+	config, format, err := image.DecodeConfig(bytes.NewReader(buf.Bytes()))
+	if err != nil {
+		return nil, core.ErrUploadFile
+	}
+
+	filename := fmt.Sprintf("%d.%s", time.Now().UnixNano(), format)
+
+	fmt.Printf("Image format: %s, width: %d, height: %d\n", format, config.Width, config.Height)
+
+	contentType := fileHeader.Header.Get("Content-Type")
+	dst := filepath.Join(folder, filename)
+
+	img, err := up.SaveFileUploaded(ctx, file, dst, contentType)
+
+	if err != nil {
+		return nil, core.ErrUploadFile
+	}
+
+	img.Width = config.Width
+	img.Height = config.Height
+
+	return img, nil
 }

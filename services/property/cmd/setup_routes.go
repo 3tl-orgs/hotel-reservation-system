@@ -12,6 +12,7 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 	propertyTypeApiTransport := composer.ComposerPropertTypeApiTransport(serviceCtx)
 	facilityPropertiesApiTransport := composer.ComposerFacilityPropertiesApiTransport(serviceCtx)
 	roomTypeApiTransport := composer.ComposerRoomTypeApiTransport(serviceCtx)
+	propertyApiTransport := composer.ComposerPropertyTransport(serviceCtx)
 
 	properties := router.Group("/properties")
 	{
@@ -49,6 +50,9 @@ func SetupRoutes(router *gin.RouterGroup, serviceCtx sctx.ServiceContext) {
 		properties.DELETE("/roomtypes/:id", roomTypeApiTransport.DeleteRoomTypeHdl())
 		properties.GET("/roomtypes", roomTypeApiTransport.ListRoomTypeHdl())
 		properties.GET("/roomtypes/property/:id", roomTypeApiTransport.GetRoomTypeByPropHdl())
+
+		// Property
+		properties.POST("/properties", propertyApiTransport.CreatePropertyHdl())
 	}
 
 }

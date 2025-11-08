@@ -11,23 +11,21 @@ func (api *api) CreateCountryHdl() gin.HandlerFunc {
 		var data model.CountryCreateDto
 
 		if err := c.ShouldBindJSON(&data); err != nil {
-			core.WriteErrorResponse(c, core.ErrBadRequest.
-				WithError(err.Error()).
-				WithDebug(err.Error()))
+			c.JSON(400, core.Error(400, err.Error(), nil))
 			return
 		}
 
 		if err := data.Validate(); err != nil {
-			core.WriteErrorResponse(c, err)
+			c.JSON(400, core.Error(400, err.Error(), nil))
 			return
 		}
 
 		if err := api.business.CreateCountryBiz(c, &data); err != nil {
-			core.WriteErrorResponse(c, err)
+			c.JSON(500, core.Error(500, err.Error(), nil))
 			return
 		}
 
 		data.Mask()
-		c.JSON(201, core.ResponseData(data.FakeId))
+		c.JSON(201, core.Success("", data.FakeId))
 	}
 }

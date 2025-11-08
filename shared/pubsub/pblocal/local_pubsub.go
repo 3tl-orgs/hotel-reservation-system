@@ -31,7 +31,7 @@ func (pb *localPubSub) Publish(ctx context.Context,
 	data.SetChannel(topic)
 
 	go func() {
-		defer core.AppRecover()
+		defer core.Recover()
 		pb.messageQueue <- data
 		log.Println("New event published", data.String(), " with data", data.Data())
 	}()
@@ -71,14 +71,14 @@ func (pb *localPubSub) Subscribe(ctx context.Context,
 func (pb *localPubSub) run() {
 	log.Println("Running pubsub")
 	go func() {
-		defer core.AppRecover()
+		defer core.Recover()
 		for {
 			message := <-pb.messageQueue
 			log.Print("Message dequeue", message)
 			if subs, ok := pb.mapChanel[message.Channel()]; ok {
 				for i := range subs {
 					go func(c chan *pubsub.Message) {
-						defer core.AppRecover()
+						defer core.Recover()
 						c <- message
 					}(subs[i])
 				}

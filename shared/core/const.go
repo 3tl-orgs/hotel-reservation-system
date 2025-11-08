@@ -7,9 +7,10 @@ const (
 	KeyCompJWT                   = "jwt"
 	KeyCompGrpcConf              = "grpc-conf"
 	KeyCountryCompLocationClient = "country-comp-location-client"
+	FolderPropertyImage          = "property-images"
+	EntityDeleted                = false
 
-
-	MaskTypeFacility = 10
+	MaskTypeFacility           = 10
 	MaskTypeWard               = 6
 	MaskTypeProvince           = 4
 	MaskTypeCountry            = 3
@@ -17,9 +18,7 @@ const (
 	MaskTypePropertyType       = 8
 	MaskTypeUser               = 1
 	MaskTypeTask               = 2
-	EntityDeleted              = false
 	MaskTypeFacilityProperties = 7
-	MaskTypeProperty           = 10
+	MaskTypeProperty           = 12
 	MaskTypeRoomType           = 11
-
 )

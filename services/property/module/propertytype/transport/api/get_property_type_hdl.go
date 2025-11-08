@@ -10,15 +10,14 @@ func (api *propertyTypeApi) GetPropertyTypeByIdHdl() gin.HandlerFunc {
 		id, err := core.FromBase58(c.Param("id"))
 
 		if err != nil {
-			c.JSON(400, core.Error(400, "", core.ErrBadRequest.
-				WithError(err.Error()).
-				WithDebug(err.Error())))
+			c.JSON(400, core.Error(400, err.Error(), nil))
+			return
 		}
 
 		data, err := api.propertyService.GetPropertyTypeByIdBiz(c, int(id.GetLocalID()))
 
 		if err != nil {
-			c.JSON(500, core.Error(500, "", err))
+			c.JSON(500, core.Error(500, err.Error(), nil))
 		}
 
 		c.JSON(200, core.Success("", data))

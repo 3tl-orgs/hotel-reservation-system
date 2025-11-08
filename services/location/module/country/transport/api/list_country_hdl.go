@@ -14,9 +14,7 @@ func (api *api) ListCountryHdl() gin.HandlerFunc {
 		var pagingData core.Paging
 
 		if err := c.ShouldBindQuery(&pagingData); err != nil {
-			core.WriteErrorResponse(c, core.ErrBadRequest.
-				WithError(err.Error()).
-				WithDebug(err.Error()))
+			c.JSON(400, core.Error(400, err.Error(), nil))
 			return
 		}
 
@@ -25,9 +23,7 @@ func (api *api) ListCountryHdl() gin.HandlerFunc {
 		var filter model.Filter
 
 		if err := c.ShouldBindJSON(&filter); err != nil {
-			core.WriteErrorResponse(c, core.ErrBadRequest.
-				WithError(err.Error()).
-				WithDebug(err.Error()))
+			c.JSON(400, core.Error(400, err.Error(), nil))
 			return
 		}
 
@@ -36,10 +32,10 @@ func (api *api) ListCountryHdl() gin.HandlerFunc {
 		data, err := api.business.ListCountryBiz(c, &filter, &pagingData)
 
 		if err != nil {
-			core.WriteErrorResponse(c, err)
+			c.JSON(500, core.Error(500, err.Error(), nil))
 			return
 		}
 
-		c.JSON(http.StatusOK, core.ResponseData(data))
+		c.JSON(http.StatusOK, core.Success("", data))
 	}
 }

@@ -12,10 +12,10 @@ func (api *api) GetCountryByCodeHdl() gin.HandlerFunc {
 		data, err := api.business.GetCountryByCodeBiz(c, code)
 
 		if err != nil {
-			core.WriteErrorResponse(c, err)
+			c.JSON(500, core.Error(500, err.Error(), nil))
 			return
 		}
 
-		c.JSON(200, core.ResponseData(data))
+		c.JSON(200, core.Success("", data))
 	}
 }

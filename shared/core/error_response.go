@@ -339,5 +339,11 @@ var ErrConflict = DefaultError{
 	CodeField:   http.StatusConflict,
 }
 
+var ErrUploadFile = DefaultError{
+	StatusField: http.StatusText(http.StatusConflict),
+	ErrorField:  "Upload load file failed",
+	CodeField:   http.StatusConflict,
+}
+
 // ErrRecordNotFound is used to make our application logic independent of other libraries errors
 var ErrRecordNotFound = errors.New("record not found")
