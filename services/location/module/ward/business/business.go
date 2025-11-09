@@ -2,6 +2,7 @@ package wardsbusiness
 
 import (
 	"context"
+	provincebusiness "github.com/ngleanhvu/go-booking/services/location/module/province/business"
 	wardsmodel "github.com/ngleanhvu/go-booking/services/location/module/ward/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
@@ -21,9 +22,13 @@ type WardRepo interface {
 }
 
 type wardBusiness struct {
-	wardRepo WardRepo
+	wardRepo     WardRepo
+	provinceRepo provincebusiness.ProvinceRepo
 }
 
-func NewWardBusiness(wardRepo WardRepo) *wardBusiness {
-	return &wardBusiness{wardRepo: wardRepo}
+func NewWardBusiness(wardRepo WardRepo, provinceRepo provincebusiness.ProvinceRepo) *wardBusiness {
+	return &wardBusiness{
+		wardRepo:     wardRepo,
+		provinceRepo: provinceRepo,
+	}
 }

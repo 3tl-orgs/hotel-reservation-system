@@ -55,7 +55,8 @@ func NewComposerCountryApiTransport(sctx srvctx.ServiceContext) CountryApiTransp
 func NewComposerProvinceApiTransport(sctx srvctx.ServiceContext) ProvinceApiTransport {
 	provinceDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
 	provinceRepo := provincerepo.NewProvinceRepo(provinceDb.GetDB())
-	provinceBusiness := provincebusiness.NewProvinceBusiness(provinceRepo)
+	countryRepo := repo.NewPostgresRepo(provinceDb.GetDB())
+	provinceBusiness := provincebusiness.NewProvinceBusiness(provinceRepo, countryRepo)
 	provinceTransport := provincetransport.NewProvinceTransport(provinceBusiness)
 	return provinceTransport
 }
@@ -63,7 +64,8 @@ func NewComposerProvinceApiTransport(sctx srvctx.ServiceContext) ProvinceApiTran
 func NewComposerWardApiTransport(sctx srvctx.ServiceContext) WardApiTransport {
 	wardDb := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
 	wardRepo := wardsrepo.NewWardRepo(wardDb.GetDB())
-	wardBusiness := wardsbusiness.NewWardBusiness(wardRepo)
+	provinceRepo := provincerepo.NewProvinceRepo(wardDb.GetDB())
+	wardBusiness := wardsbusiness.NewWardBusiness(wardRepo, provinceRepo)
 	wardTransport := wardstransport.NewWardTransport(wardBusiness)
 	return wardTransport
 }

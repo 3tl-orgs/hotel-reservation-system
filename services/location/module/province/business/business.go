@@ -2,6 +2,7 @@ package provincebusiness
 
 import (
 	"context"
+	"github.com/ngleanhvu/go-booking/services/location/module/country/business"
 	provincemodel "github.com/ngleanhvu/go-booking/services/location/module/province/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
@@ -20,8 +21,12 @@ type ProvinceRepo interface {
 
 type provinceBusiness struct {
 	provinceRepo ProvinceRepo
+	countryRepo  business.CountryRepo
 }
 
-func NewProvinceBusiness(provinceRepo ProvinceRepo) *provinceBusiness {
-	return &provinceBusiness{provinceRepo: provinceRepo}
+func NewProvinceBusiness(provinceRepo ProvinceRepo, countryRepo business.CountryRepo) *provinceBusiness {
+	return &provinceBusiness{
+		provinceRepo: provinceRepo,
+		countryRepo:  countryRepo,
+	}
 }
