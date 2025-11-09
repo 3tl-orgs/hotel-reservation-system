@@ -1,4 +1,4 @@
-package postgres
+package amenityrepo
 
 import "gorm.io/gorm"
 

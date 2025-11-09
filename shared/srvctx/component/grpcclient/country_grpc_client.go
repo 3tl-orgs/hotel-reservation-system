@@ -39,16 +39,14 @@ func (c *CountryRPCComponent) ID() string {
 
 // InitFlags khai báo cờ cấu hình cho địa chỉ gRPC server
 func (c *CountryRPCComponent) InitFlags() {
-	prefix := c.prefix
-	if prefix != "" {
-		prefix += "-"
+	if flag.Lookup("grpc-location-server-address") == nil {
+		flag.StringVar(
+			&c.addr,
+			"grpc-location-server-address",
+			"localhost:3101",
+			"location gRPC server address. Default: localhost:3101",
+		)
 	}
-	flag.StringVar(
-		&c.addr,
-		"grpc-location-server-address",
-		"localhost:3101",
-		"location gRPC server address. Default: localhost:3101",
-	)
 }
 
 // Activate khởi tạo kết nối gRPC
@@ -95,6 +93,7 @@ func (c *CountryRPCComponent) GetCountryById(ctx context.Context, id int32) (*dt
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	log.Println("call to grpc location country")
 	return &dto.CountryResponse{
 		Id:   int(resp.Id),
 		Code: resp.Code,

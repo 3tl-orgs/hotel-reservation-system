@@ -1,4 +1,4 @@
-package biz
+package propertytypebiz
 
 import (
 	"context"
@@ -8,16 +8,16 @@ import (
 )
 
 func (b *business) CreatePropertyTypeBiz(ctx context.Context,
-	data *model.PropertyTypeCreateDto) error {
+	data *propertytypemodel.PropertyTypeCreateDto) error {
 
 	isExistByName := b.propertyTypeRepo.ExistByName(ctx, data.Name)
 
 	if isExistByName {
-		return core.ErrInternalServerError.WithError(model.PropertyTypeNameIsDuplicateErr.Error())
+		return core.ErrInternalServerError.WithError(propertytypemodel.PropertyTypeNameIsDuplicateErr.Error())
 	}
 
 	if err := b.propertyTypeRepo.Create(ctx, data); err != nil {
-		return core.ErrInternalServerError.WithError(model.CannotCreatePropertyTypeErr.Error())
+		return core.ErrInternalServerError.WithError(propertytypemodel.CannotCreatePropertyTypeErr.Error())
 	}
 
 	return nil

@@ -17,9 +17,9 @@ import (
 )
 
 func newServiceCtx() sctx.ServiceContext {
-	migrationPath, err := filepath.Abs("./migrations")
+	migrationPath, err := filepath.Abs("./services/property/migrations")
 	if err != nil {
-		migrationPath = "./migrations"
+		migrationPath = "./services/property/migrations"
 	}
 
 	migrationUrl := core.ToFileURL(migrationPath)
@@ -30,6 +30,8 @@ func newServiceCtx() sctx.ServiceContext {
 		sctx.WithComponent(gormc.NewGormDB(core.KeyCompPostgres, "", migrationUrl)),
 		sctx.WithComponent(NewGrpcConfig()),
 		sctx.WithComponent(grpcclient.NewCountryRPCClientComponent(core.KeyCountryCompLocationClient, "")),
+		sctx.WithComponent(grpcclient.NewProvinceRPCClientComponent(core.KeyProvinceCompLocationClient, "")),
+		sctx.WithComponent(grpcclient.NewWardRPCClientComponent(core.KeyWardCompLocationClient, "")),
 	)
 }
 

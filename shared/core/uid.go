@@ -169,3 +169,11 @@ func (uids *UIDS) UnmarshalJSON(data []byte) error {
 	}
 	return nil
 }
+
+func TransferData(uid string) (int, error) {
+	id, err := FromBase58(uid)
+	if err != nil {
+		return 0, ErrInternalServerError.WithError(err.Error()).WithDebug(err.Error())
+	}
+	return int(id.GetLocalID()), nil
+}

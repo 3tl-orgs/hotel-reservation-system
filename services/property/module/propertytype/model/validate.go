@@ -1,4 +1,4 @@
-package model
+package propertytypemodel
 
 func checkPropertyName(name string) error {
 	if name == "" {

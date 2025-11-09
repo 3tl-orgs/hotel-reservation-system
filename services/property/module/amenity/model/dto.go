@@ -1,4 +1,4 @@
-package model
+package amenitymodel
 
 import (
 	"strings"
@@ -31,10 +31,9 @@ func (a *AmenityCreateDto) Validate() error {
 	return nil
 }
 
-
 type AmenityUpdateDto struct {
-	Icon *string `json:"icon" gorm:"column:icon" db:"icon"`
-	Name *string  `json:"name" gorm:"column:name" db:"name"`
+	Icon      *string    `json:"icon" gorm:"column:icon" db:"icon"`
+	Name      *string    `json:"name" gorm:"column:name" db:"name"`
 	UpdatedAt *time.Time `json:"updated_at" gorm: "column:updated_at" db:"updated_at"`
 }
 
@@ -42,10 +41,10 @@ func (AmenityUpdateDto) TableName() string { //Xác định update cho table nà
 	return Amenity{}.TableName()
 }
 
-func (a *AmenityUpdateDto) Validate() error { 
+func (a *AmenityUpdateDto) Validate() error {
 	if a.Name != nil {
 		*a.Name = strings.TrimSpace(*a.Name)
-		
+
 		if err := checkAmenityName(*a.Name); err != nil {
 			return err
 		}

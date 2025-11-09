@@ -1,14 +1,16 @@
 package core
 
 const (
-	KeyCompMySQL                 = "mysql"
-	KeyCompGIN                   = "gin"
-	KeyCompPostgres              = "postgres"
-	KeyCompJWT                   = "jwt"
-	KeyCompGrpcConf              = "grpc-conf"
-	KeyCountryCompLocationClient = "country-comp-location-client"
-	FolderPropertyImage          = "property-images"
-	EntityDeleted                = false
+	KeyCompMySQL                  = "mysql"
+	KeyCompGIN                    = "gin"
+	KeyCompPostgres               = "postgres"
+	KeyCompJWT                    = "jwt"
+	KeyCompGrpcConf               = "grpc-conf"
+	KeyCountryCompLocationClient  = "country-comp-location-client"
+	KeyProvinceCompLocationClient = "province-comp-location-client"
+	KeyWardCompLocationClient     = "ward-comp-location-client"
+	FolderPropertyImage           = "property-images"
+	EntityDeleted                 = false
 
 	MaskTypeFacility           = 10
 	MaskTypeWard               = 6

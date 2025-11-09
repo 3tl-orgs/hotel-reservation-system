@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ngleanhvu/go-booking/services/property/module/amenity/biz"
-	"github.com/ngleanhvu/go-booking/services/property/module/amenity/repo/postgres"
+	amenitybiz "github.com/ngleanhvu/go-booking/services/property/module/amenity/biz"
+	amenityrepo "github.com/ngleanhvu/go-booking/services/property/module/amenity/repo"
 	"github.com/ngleanhvu/go-booking/services/property/module/amenity/transport/api"
 	facilitybiz "github.com/ngleanhvu/go-booking/services/property/module/facility/biz"
 	facilityrepo "github.com/ngleanhvu/go-booking/services/property/module/facility/repo"
@@ -16,10 +16,9 @@ import (
 	propertybiz "github.com/ngleanhvu/go-booking/services/property/module/property/biz"
 	propertystore "github.com/ngleanhvu/go-booking/services/property/module/property/repo"
 	propertyapi "github.com/ngleanhvu/go-booking/services/property/module/property/transport/api"
-	propertydetailstore "github.com/ngleanhvu/go-booking/services/property/module/propertydetail/repo"
-	propertyTypeBiz "github.com/ngleanhvu/go-booking/services/property/module/propertytype/biz"
-	propertyTypeRepo1 "github.com/ngleanhvu/go-booking/services/property/module/propertytype/repo"
-	propertyTypeTransport "github.com/ngleanhvu/go-booking/services/property/module/propertytype/transport/api"
+	propertytypebiz "github.com/ngleanhvu/go-booking/services/property/module/propertytype/biz"
+	propertytyperepo "github.com/ngleanhvu/go-booking/services/property/module/propertytype/repo"
+	propertytypeapi "github.com/ngleanhvu/go-booking/services/property/module/propertytype/transport/api"
 	roomtypebiz "github.com/ngleanhvu/go-booking/services/property/module/roomtype/biz"
 	roomtyperepo "github.com/ngleanhvu/go-booking/services/property/module/roomtype/repo"
 	roomtypeapi "github.com/ngleanhvu/go-booking/services/property/module/roomtype/transport/api"
@@ -77,11 +76,11 @@ type PropertyApiTransport interface {
 
 func ComposerAmenityApiTransport(sctx srvctx.ServiceContext) AmenityApiTransport {
 	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
-	amenityRepo := postgres.NewPostgresRepo(db.GetDB())
+	amenityRepo := amenityrepo.NewPostgresRepo(db.GetDB())
 
-	locationClient := sctx.MustGet(core.KeyCountryCompLocationClient).(*grpcclient.CountryRPCComponent)
+	countryClient := sctx.MustGet(core.KeyCountryCompLocationClient).(*grpcclient.CountryRPCComponent)
 
-	amenityService := biz.NewBusiness(amenityRepo, locationClient)
+	amenityService := amenitybiz.NewBusiness(amenityRepo, countryClient)
 	amenityApi := api.NewAmenityApi(amenityService)
 	return amenityApi
 }
@@ -113,9 +112,9 @@ func ComposerFacilityPropertiesApiTransport(sctx srvctx.ServiceContext) Facility
 
 func ComposerPropertTypeApiTransport(sctx srvctx.ServiceContext) PropertyTypeApiTransport {
 	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
-	propertyTypeRepo := propertyTypeRepo1.NewPostgresRepo(db.GetDB())
-	propertyTypeService := propertyTypeBiz.NewBusiness(propertyTypeRepo)
-	propertyTypeApi := propertyTypeTransport.NewPropertyTypeApi(propertyTypeService)
+	propertyTypeRepo := propertytyperepo.NewPostgresRepo(db.GetDB())
+	propertyTypeService := propertytypebiz.NewBusiness(propertyTypeRepo)
+	propertyTypeApi := propertytypeapi.NewPropertyTypeApi(propertyTypeService)
 	return propertyTypeApi
 }
 
@@ -129,15 +128,18 @@ func ComposerRoomTypeApiTransport(sctx srvctx.ServiceContext) RoomTypeApiTranspo
 
 func ComposerPropertyTransport(sctx srvctx.ServiceContext) PropertyApiTransport {
 	db := sctx.MustGet(core.KeyCompPostgres).(core.GormComponent)
+	countryClient := sctx.MustGet(core.KeyCountryCompLocationClient).(*grpcclient.CountryRPCComponent)
+	provinceClient := sctx.MustGet(core.KeyProvinceCompLocationClient).(*grpcclient.ProvinceRPCComponent)
+	wardClient := sctx.MustGet(core.KeyWardCompLocationClient).(*grpcclient.WardRPCComponent)
 	propertyRepo := propertystore.NewPropertyStore(db.GetDB())
-	propertyDetailRepo := propertydetailstore.NewPropertyDetailStore(db.GetDB())
+	propertyTypeRepo := propertytyperepo.NewPostgresRepo(db.GetDB())
 	bucketName := os.Getenv("R2_BUCKET_NAME")
 	accessKey := os.Getenv("R2_ACCESS_KEY_ID")
 	secretKey := os.Getenv("R2_SECRET_ACCESS_KEY")
 	accountId := os.Getenv("R2_ACCOUNT_ID")
 	domain := os.Getenv("R2_PUBLIC_DOMAIN")
 	s3Uploader := uploadprovider.NewR2Provider(bucketName, accountId, accessKey, secretKey, domain)
-	propertyBiz := propertybiz.NewPropertyBiz(propertyRepo, propertyDetailRepo, s3Uploader)
+	propertyBiz := propertybiz.NewPropertyBiz(propertyRepo, s3Uploader, propertyTypeRepo, countryClient, provinceClient, wardClient)
 	propertyApi := propertyapi.NewPropertyApi(propertyBiz)
 	return propertyApi
 }

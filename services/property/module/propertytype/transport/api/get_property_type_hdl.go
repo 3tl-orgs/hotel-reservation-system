@@ -1,4 +1,4 @@
-package api
+package propertytypeapi
 
 import (
 	"github.com/gin-gonic/gin"

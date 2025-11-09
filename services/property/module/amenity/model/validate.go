@@ -1,4 +1,4 @@
-package model
+package amenitymodel
 
 func checkAmenityName(name string) error {
 	if name == "" {

@@ -1,4 +1,4 @@
-package model
+package propertytypemodel
 
 import (
 	"strings"

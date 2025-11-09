@@ -1,9 +1,9 @@
-package repo
+package propertytyperepo
 
 import (
 	"context"
 
-	"github.com/ngleanhvu/go-booking/services/property/module/propertytype/model"
+	propertytypemodel "github.com/ngleanhvu/go-booking/services/property/module/propertytype/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
@@ -11,12 +11,12 @@ import (
 
 func (s *postgresStore) List(
 	ctx context.Context,
-	filter *model.Filter,
+	filter *propertytypemodel.Filter,
 	paging core.Paging,
 	moreInfo ...string,
-) ([]model.PropertyType, error) {
+) ([]propertytypemodel.PropertyType, error) {
 
-	db := s.db.WithContext(ctx).Model(&model.PropertyType{})
+	db := s.db.WithContext(ctx).Model(&propertytypemodel.PropertyType{})
 
 	// Preload quan hệ (nếu có)
 	for _, m := range moreInfo {
@@ -35,7 +35,7 @@ func (s *postgresStore) List(
 	allowedSortFields := []string{"id", "name", "created_at", "updated_at"}
 
 	// Gọi hàm phân trang dùng chung
-	data, err := core.Paginate[model.PropertyType](db, &paging, allowedSortFields, modify)
+	data, err := core.Paginate[propertytypemodel.PropertyType](db, &paging, allowedSortFields, modify)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

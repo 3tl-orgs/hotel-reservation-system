@@ -1,4 +1,4 @@
-package repo
+package propertytyperepo
 
 import "gorm.io/gorm"
 

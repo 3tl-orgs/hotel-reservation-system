@@ -1,14 +1,14 @@
-package api
+package propertytypeapi
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ngleanhvu/go-booking/services/property/module/propertytype/model"
+	propertytypemodel "github.com/ngleanhvu/go-booking/services/property/module/propertytype/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
 func (api *propertyTypeApi) CreatePropertyTypeHdl() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var data model.PropertyTypeCreateDto
+		var data propertytypemodel.PropertyTypeCreateDto
 
 		if err := c.ShouldBindJSON(&data); err != nil {
 			c.JSON(400, core.Error(400, err.Error(), nil))

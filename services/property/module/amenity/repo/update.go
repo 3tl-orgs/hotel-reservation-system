@@ -1,13 +1,13 @@
-package postgres
+package amenityrepo
 
 import (
 	"context"
 
-	"github.com/ngleanhvu/go-booking/services/property/module/amenity/model"
+	amenitymodel "github.com/ngleanhvu/go-booking/services/property/module/amenity/model"
 	"github.com/pkg/errors"
 )
 
-func (s *postgresRepo) Update(ctx context.Context, id int, data *model.AmenityUpdateDto) error {
+func (s *postgresRepo) Update(ctx context.Context, id int, data *amenitymodel.AmenityUpdateDto) error {
 	updateData := map[string]interface{}{}
 
 	if data.Name != nil {
@@ -23,7 +23,7 @@ func (s *postgresRepo) Update(ctx context.Context, id int, data *model.AmenityUp
 	}
 
 	if err := s.db.WithContext(ctx).
-		Table(model.Amenity{}.TableName()).
+		Table(amenitymodel.Amenity{}.TableName()).
 		Where("id = ? AND status = ?", id, true).
 		Updates(updateData).Error; err != nil {
 		return errors.WithStack(err)

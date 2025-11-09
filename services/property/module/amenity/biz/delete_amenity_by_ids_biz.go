@@ -1,10 +1,9 @@
-package biz
+package amenitybiz
 
 import (
 	"context"
 
-
-	"github.com/ngleanhvu/go-booking/services/property/module/amenity/model"
+	amenitymodel "github.com/ngleanhvu/go-booking/services/property/module/amenity/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
@@ -22,8 +21,8 @@ func (biz *business) DeleteAmenityByIdsBiz(ctx context.Context, ids []int) error
 	// }
 
 	if err := biz.repo.DeleteMany(ctx, ids); err != nil {
-		return  core.ErrInternalServerError.
-			WithError(model.ErrCannotDeleteManyAmenities.Error()).
+		return core.ErrInternalServerError.
+			WithError(amenitymodel.ErrCannotDeleteManyAmenities.Error()).
 			WithDebug(err.Error())
 	}
 

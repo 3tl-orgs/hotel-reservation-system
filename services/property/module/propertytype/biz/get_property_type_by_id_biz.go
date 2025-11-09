@@ -1,4 +1,4 @@
-package biz
+package propertytypebiz
 
 import (
 	"context"
@@ -7,10 +7,10 @@ import (
 	"github.com/ngleanhvu/go-booking/shared/core"
 )
 
-func (b *business) GetPropertyTypeByIdBiz(ctx context.Context, id int) (*model.PropertyType, error) {
+func (b *business) GetPropertyTypeByIdBiz(ctx context.Context, id int) (*propertytypemodel.PropertyType, error) {
 	data, err := b.propertyTypeRepo.GetById(ctx, id)
 	if err != nil {
-		return nil, core.ErrInternalServerError.WithError(model.CannotGetPropertyTypeErr.Error())
+		return nil, core.ErrInternalServerError.WithError(propertytypemodel.CannotGetPropertyTypeErr.Error())
 	}
 	return data, nil
 }

@@ -1,17 +1,17 @@
-package repo
+package propertytyperepo
 
 import (
 	"context"
 
-	"github.com/ngleanhvu/go-booking/services/property/module/propertytype/model"
+	propertytypemodel "github.com/ngleanhvu/go-booking/services/property/module/propertytype/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
-func (s *postgresStore) GetById(ctx context.Context, id int) (*model.PropertyType, error) {
-	var data model.PropertyType
-	if err := s.db.Table(model.PropertyType{}.TableName()).
+func (s *postgresStore) GetById(ctx context.Context, id int) (*propertytypemodel.PropertyType, error) {
+	var data propertytypemodel.PropertyType
+	if err := s.db.Table(propertytypemodel.PropertyType{}.TableName()).
 		Where("id = ?", id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, core.ErrRecordNotFound

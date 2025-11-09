@@ -1,17 +1,17 @@
-package biz
+package amenitybiz
 
 import (
 	"context"
 
-	"github.com/ngleanhvu/go-booking/services/property/module/amenity/model"
+	amenitymodel "github.com/ngleanhvu/go-booking/services/property/module/amenity/model"
 	"github.com/ngleanhvu/go-booking/shared/dto"
 )
 
 type AmenityRepo interface {
-	Create(ctx context.Context, data *model.AmenityCreateDto) error
-	GetByIds(ctx context.Context, ids []int) ([]model.Amenity, error)
-	GetById(ctx context.Context, id int) (*model.Amenity, error)
-	Update(ctx context.Context, id int, data *model.AmenityUpdateDto) error
+	Create(ctx context.Context, data *amenitymodel.AmenityCreateDto) error
+	GetByIds(ctx context.Context, ids []int) ([]amenitymodel.Amenity, error)
+	GetById(ctx context.Context, id int) (*amenitymodel.Amenity, error)
+	Update(ctx context.Context, id int, data *amenitymodel.AmenityUpdateDto) error
 	Delete(ctx context.Context, id int) error
 	DeleteMany(ctx context.Context, ids []int) error
 }
