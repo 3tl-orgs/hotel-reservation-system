@@ -20,7 +20,7 @@ type PropertyCreateDTO struct {
 	Lng            *float64                `form:"lng"`
 	PropertyTypeId string                  `form:"property_type_id"`
 	Description    *string                 `form:"description"`
-	ImageFiles     []*multipart.FileHeader `form:"image_files"` // ✅ đổi sang slice thường
+	ImageFiles     []*multipart.FileHeader `form:"image_files"`
 	Images         *core.Images            `gorm:"column:images"`
 	CheckInTime    *string                 `form:"check_in_time"`
 	CheckoutTime   *string                 `form:"check_out_time"`

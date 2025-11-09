@@ -6,12 +6,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"log"
 	"mime/multipart"
 	"path/filepath"
 	"time"
 
 	propertymodel "github.com/ngleanhvu/go-booking/services/property/module/property/model"
 	propertydetailmodel "github.com/ngleanhvu/go-booking/services/property/module/propertydetail/model"
+	"github.com/ngleanhvu/go-booking/services/property/module/propertytype/model"
 	"github.com/ngleanhvu/go-booking/shared/core"
 	"github.com/ngleanhvu/go-booking/shared/uploadprovider"
 )
@@ -40,14 +42,14 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 	// 	return core.ErrInternalServerError.WithError(err.Error())
 	// }
 
-	// req.Thumbnail = &core.JSONObject[core.Image]{thumbnail}
+	// req.Thumbnail = thumbnail
 
 	property := &propertymodel.Property{
 		PropertyTypeId: propertyTypeId,
 		CountryId:      countryId,
 		ProvinceId:     provinceId,
 		WardId:         wardId,
-		Thumbnail:      req.Thumbnail,
+		Thumbnail:      nil,
 		Address:        req.Address,
 		Lat:            req.Lat,
 		Lng:            req.Lng,
@@ -55,7 +57,7 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 		Star:           nil,
 	}
 
-	// images := core.JSONType[core.Image]{}
+	// images := core.Images{}
 	// if req.Images != nil {
 	// 	for _, item := range req.ImageFiles {
 	// 		image, err := HandleImage(ctx, core.FolderPropertyImage, item, b.uploadProvider)
@@ -67,15 +69,33 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 	// }
 
 	var bestAmenities []string
+
+	log.Print("req best amenities ", req.BestAmenities)
 	if req.BestAmenities != nil && *req.BestAmenities != "" {
-		if err := json.Unmarshal([]byte(*req.BestAmenities), &bestAmenities); err != nil {
+		log.Printf("raw BestAmenities: %s", *req.BestAmenities)
+
+		amenitiesStr := *req.BestAmenities
+
+		// Handle double-encoded JSON (unwrap outer quotes)
+		var tempStr string
+		if err := json.Unmarshal([]byte(amenitiesStr), &tempStr); err == nil {
+			// Successfully unwrapped, use the inner string
+			amenitiesStr = tempStr
+		}
+
+		// Parse the actual JSON array
+		if err := json.Unmarshal([]byte(amenitiesStr), &bestAmenities); err != nil {
 			return fmt.Errorf("invalid bestAmenities json: %w", err)
 		}
 	}
 
-	bestAmenitiesFormat := make([]int, 0, len(bestAmenities))
+	log.Printf("bestAmenities: %+v", bestAmenities)
+
+	// Convert string[] to int[]
+	var bestAmenitiesFormat core.JSONTypeInt
 	for _, item := range bestAmenities {
 		uid, err := core.FromBase58(item)
+		log.Print(int(uid.GetLocalID()))
 		if err != nil {
 			return core.ErrInternalServerError.WithError(err.Error())
 		}
@@ -96,7 +116,7 @@ func (b *business) CreatePropertyBiz(ctx context.Context, req *propertymodel.Pro
 	}
 
 	if err := b.propertyStore.Create(ctx, property); err != nil {
-		return core.ErrInternalServerError.WithError(propertymodel.ErrCannotCreateProperty.Error())
+		return core.ErrInternalServerError.WithError(model.CannotCreatePropertyTypeErr.Error()).WithDebug(err.Error())
 	}
 
 	if err := b.propertyDetailStore.Create(ctx, propertyDetail); err != nil {
